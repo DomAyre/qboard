@@ -1,0 +1,31 @@
+{
+    "properties" : {
+        "organisation" : {
+            "description" : "The organisation, such as NGB or league, responsible for setting up the match",
+            "type" : "string"
+        },
+        "tournament" : {
+            "description" : "The particular tournament in which the match is played",
+            "type" : "string"
+        },
+        "date" : {
+            "description" : "The date the match was played",
+            "type" : "string",
+            "format" : "date-time"
+        },
+        "team1" : {
+            "description" : "The first team in the match, also the home team if applicable",
+            "type" : "string"
+        },
+        "team2" : {
+            "description" : "The second team in the match, also the away team if applicable",
+            "type" : "string"
+        },
+        "duration" : {
+            "description" : "The length of time the match went on for, in minutes and seconds",
+            "type" : "string",
+            "format" : "time"
+        }
+    },
+    "required" : ["date", "team1", "team2", "duration"]
+}
