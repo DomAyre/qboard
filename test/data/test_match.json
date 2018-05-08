@@ -1,6 +1,30 @@
 {
     "date" : "2012-04-23",
     "duration" : "25:25",
-    "team1" : "Bears",
-    "team2" : "Bees"
+    "teams" : {
+        "0" : "Bears",
+        "1" : "Bees"
+    },
+    "goals" : [
+        {
+            "time" : "12:34",
+            "team" : 1,
+            "scorer" : "Viral Patel",
+            "assist" : "Dom Ayre"
+        }
+    ],
+    "cards" : [
+        {
+            "time" : "23:45",
+            "team" : 1,
+            "severity" : "yellow"
+        }
+    ],
+    "catches" : [
+        {
+            "time" : "25:25",
+            "team" : 0,
+            "call" : "good"
+        }
+    ]
 }

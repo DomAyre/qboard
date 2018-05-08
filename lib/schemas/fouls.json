@@ -1,0 +1,11 @@
+{
+    "fouls" : {
+        "description" : "The fouls of quidditch",
+        "type" : "array",
+        "items" : {
+            "Contact from behind" : {
+                "typical_card" : "yellow"
+            }
+        }
+    }
+}

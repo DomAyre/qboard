@@ -13,19 +13,101 @@
             "type" : "string",
             "format" : "date-time"
         },
-        "team1" : {
-            "description" : "The first team in the match, also the home team if applicable",
-            "type" : "string"
-        },
-        "team2" : {
-            "description" : "The second team in the match, also the away team if applicable",
-            "type" : "string"
+        "teams" : {
+            "description" : "The teams involved in the match",
+            "type" : "object",
+            "properties" : {
+                "0" : "string",
+                "1" : "string"
+            }
         },
         "duration" : {
             "description" : "The length of time the match went on for, in minutes and seconds",
             "type" : "string",
             "format" : "time"
+        },
+        "goals" : {
+            "description" : "The goals which were scored in the match",
+            "type" : "array",
+            "items" : {
+                "type" : "object",
+                "properties" : {
+                    "time" : {
+                        "type" : "string",
+                        "format" : "time"
+                    },
+                    "team" : {
+                        "type" : "integer",
+                        "enum" : [0, 1]
+                    },
+                    "scorer" : {
+                        "type" : "string"
+                    },
+                    "assist" : {
+                        "type" : "string"
+                    }
+                },
+                "required" : ["time", "team"]
+            }
+        },
+        "cards" : {
+            "description" : "The cards that players recieved in the match",
+            "type" : "array",
+            "items" : {
+                "type" : "object",
+                "properties" : {
+                    "time" : {
+                        "type" : "string",
+                        "format" : "time"
+                    },
+                    "team" : {
+                        "type" : "integer",
+                        "enum" : [0, 1]
+                    },
+                    "player" : {
+                        "type" : "string"
+                    },
+                    "severity" : {
+                        "type" : "string",
+                        "enum" : ["blue", "yellow", "red"]
+                    },
+                    "foul" : {
+                        "type" : "string"
+                    }
+                },
+                "required" : ["time", "team", "severity"]
+            }
+        },
+        "catches" : {
+            "description" : "The snitch catches of the match",
+            "type" : "array",
+            "items" : {
+                "type" : "object",
+                "properties" : {
+                    "time" : {
+                        "type" : "string",
+                        "format" : "time"
+                    },
+                    "team" : {
+                        "type" : "integer",
+                        "enum" : [0, 1]
+                    },
+                    "catcher" : {
+                        "type" : "string"
+                    },
+                    "call" : {
+                        "type" : "string",
+                        "enum" : ["good", "bad"],
+                        "properties" : {
+                            "reason" : {
+                                "type" : "string"
+                            }
+                        }
+                    }
+                },
+                "required" : ["time", "team", "call"]
+            }
         }
     },
-    "required" : ["date", "team1", "team2", "duration"]
+    "required" : ["date", "teams", "duration", "goals", "cards", "catches"]
 }
