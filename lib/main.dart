@@ -9,7 +9,8 @@ class QBoard extends StatelessWidget {
     return new MaterialApp(
       title: 'QBoard',
       theme: new ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.green[800],
+        accentColor: Colors.orange[600]
       ),
       home: new MatchesPage(title: 'QBoard'),
     );
