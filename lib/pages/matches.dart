@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import '../widgets/timer.dart';
-
 
 class MatchesPage extends StatefulWidget {
     MatchesPage({Key key, this.title}) : super(key: key);
@@ -9,18 +7,23 @@ class MatchesPage extends StatefulWidget {
     final String title;
 
     @override
-    _MatchesPageState createState() => new _MatchesPageState(); 
+    MatchState createState() => new MatchState(); 
 }
 
-class _MatchesPageState extends State<MatchesPage> {
+class MatchState extends State<MatchesPage> {
 
-  Stopwatch matchStopwatch = new Stopwatch();
+  MatchTimer matchTimer;
+
+  MatchState() {
+    matchTimer = new MatchTimer(match: this);
+  }
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
+
     return new Scaffold(
       appBar: new AppBar(
-        title: new TimerText(stopwatch : matchStopwatch),
+        title: new TimerText(matchTimer : matchTimer),
         centerTitle: true,
         bottom: new PreferredSize(
           preferredSize: const Size.fromHeight(100.0),
@@ -28,7 +31,29 @@ class _MatchesPageState extends State<MatchesPage> {
         ),
       ),
       body: new Center(
+        child: new TimerPlayPause(matchTimer: matchTimer)
       ),
     );
   }
+
+  // MATCH API
+
+  bool isMatchRunning() {
+    return matchTimer.isRunning;
+  }
+
+  Duration getMatchTime() {
+    return matchTimer.elapsed;
+  }
+
+  String getMatchTimeString() {
+    return matchTimer.getTimeString();
+  }
+
+  void startTimer() {
+    matchTimer.start();
+  }
+
+
+
 }
