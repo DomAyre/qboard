@@ -51,7 +51,7 @@ class TimerTextState extends State<TimerText> {
 class TimerPlayPause extends StatefulWidget {
 
   final MatchTimer matchTimer;
-  const TimerPlayPause({this.matchTimer});
+  TimerPlayPause({this.matchTimer});
 
   @override
   TimerPlayPauseState createState() => new TimerPlayPauseState(matchTimer: matchTimer); 
