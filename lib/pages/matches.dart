@@ -25,21 +25,30 @@ class MatchState extends State<MatchesPage> {
   @override
   Widget build(BuildContext context) {
 
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new TimerText(matchTimer : matchTimer),
-        centerTitle: true,
-        bottom: new PreferredSize(
-          preferredSize: const Size.fromHeight(100.0),
-          child: new Container(
-            child: new Padding(
-              padding: EdgeInsets.only(top: 40.0, bottom: 40.0,),
-              child: ScoreText(scoreKeeper: scoreKeeper)),
-          ),
+    AppBar appBar = new AppBar(
+      title: new TimerText(matchTimer : matchTimer),
+      centerTitle: true,
+      bottom: new PreferredSize(
+        preferredSize: const Size.fromHeight(100.0),
+        child: new Container(
+          child: new Padding(
+            padding: EdgeInsets.only(top: 40.0, bottom: 40.0,),
+            child: ScoreText(scoreKeeper: scoreKeeper)),
         ),
       ),
+    );
+
+    return new Scaffold(
+      appBar: appBar,
       body: new Center(
-        child: new TimerPlayPause(matchTimer: matchTimer)
+        child: new Row (
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            new ScoreButton(scoreKeeper: scoreKeeper, matchTimer: matchTimer, team: scoreKeeper.matchData.team1),
+            new TimerPlayPause(matchTimer: matchTimer),
+            new ScoreButton(scoreKeeper: scoreKeeper, matchTimer: matchTimer, team: scoreKeeper.matchData.team2),
+          ],
+        ),
       ),
     );
   }
@@ -61,7 +70,4 @@ class MatchState extends State<MatchesPage> {
   void startTimer() {
     matchTimer.start();
   }
-
-
-
 }
