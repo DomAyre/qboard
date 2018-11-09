@@ -109,5 +109,5 @@
             }
         }
     },
-    "required" : ["date", "teams", "duration", "goals", "cards", "catches"]
+    "required" : ["teams", "duration", "goals", "cards", "catches"]
 }

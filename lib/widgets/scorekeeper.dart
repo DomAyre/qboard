@@ -17,11 +17,12 @@ class ScoreKeeper extends Manager {
   void score(Duration time, Team team) {
     new Goal(time, team);
     invalidate();
+    print(match.toJson());
   }
 
-  String getScoreString() {
-    return "${matchData.team1Score()}0 - ${matchData.team2Score()}0";
-  }
+  List<Map<String, dynamic>> getGoals() => matchData.getGoals();
+
+  String getScoreString() => "${matchData.team1Score()}0 - ${matchData.team2Score()}0";
 }
 
 class ScoreText extends StatefulWidget {
@@ -30,9 +31,7 @@ class ScoreText extends StatefulWidget {
   ScoreText({this.scoreKeeper});
 
   @override
-  ScoreTextState createState() {
-    return ScoreTextState(scoreKeeper: scoreKeeper);
-  }
+  ScoreTextState createState() => ScoreTextState(scoreKeeper: scoreKeeper);
 }
 
 class ScoreTextState extends State<ScoreText> {

@@ -6,4 +6,6 @@ class Team {
   List<Goal> goals = [];
 
   Team({this.name});
+
+  List<Map<String, dynamic>> getGoalsJson() => List.from(goals.map(Goal.toJson));
 }

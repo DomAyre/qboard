@@ -19,7 +19,9 @@ class MatchState extends State<MatchesPage> {
 
   MatchState() {
     matchTimer = new MatchTimer(match: this);
-    scoreKeeper = new ScoreKeeper(this, new Team(name: "TeamA"), new Team(name: "TeamB"));
+    Team team1 = new Team(name: "TeamA");
+    Team team2 = new Team(name: "TeamB");
+    scoreKeeper = new ScoreKeeper(this, team1, team2);
   }
 
   @override
@@ -55,19 +57,22 @@ class MatchState extends State<MatchesPage> {
 
   // MATCH API
 
-  bool isMatchRunning() {
-    return matchTimer.isRunning;
-  }
+  Map<String, dynamic> toJson() => {
+    "duration": matchTimer.elapsed,
+    "teams" : {
+      "0" : scoreKeeper.matchData.team1,
+      "1" : scoreKeeper.matchData.team2,
+    },
+    "goals" : scoreKeeper.getGoals(),
+    "cards" : [],
+    "catches" : [],
+  };
 
-  Duration getMatchTime() {
-    return matchTimer.elapsed;
-  }
+  bool isMatchRunning() => matchTimer.isRunning;
 
-  String getMatchTimeString() {
-    return matchTimer.getTimeString();
-  }
+  Duration getMatchTime() => matchTimer.elapsed;
 
-  void startTimer() {
-    matchTimer.start();
-  }
+  String getMatchTimeString() => matchTimer.getTimeString();
+
+  void startTimer() => matchTimer.start();
 }

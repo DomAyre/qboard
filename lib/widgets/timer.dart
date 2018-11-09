@@ -7,13 +7,9 @@ class MatchTimer extends Stopwatch {
   final MatchState match;
   MatchTimer({this.match});
 
-  String _formatTime(int number) {
-    return number >= 10 ? "$number" : "0$number"; 
-  }
+  String _formatTime(int number) => number >= 10 ? "$number" : "0$number";
 
-  String getTimeString() {
-    return "${this._formatTime(this.elapsed.inMinutes)}:${this._formatTime(this.elapsed.inSeconds.round().remainder(60))}";
-  }
+  String getTimeString() => "${this._formatTime(this.elapsed.inMinutes)}:${this._formatTime(this.elapsed.inSeconds.round().remainder(60))}";
 }
 
 class TimerText extends StatefulWidget {

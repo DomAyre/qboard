@@ -10,6 +10,8 @@ class Match {
 
   int team1Score() => this.team1.goals.length;
   int team2Score() => this.team2.goals.length;
+
+  List<Map<String, dynamic>> getGoals() => team1.getGoalsJson() + team2.getGoalsJson();
 }
 
 class Goal {
@@ -24,4 +26,9 @@ class Goal {
     if (this.scorer is Player) this.scorer.goals.add(this);
     if (this.assist is Player) this.assist.assists.add(this);
   }
+
+  static Map<String, dynamic> toJson(Goal goal) => {
+    "time" : goal.time,
+    "team" : goal.team
+  };
 }
