@@ -32,7 +32,7 @@ class MatchState extends State<MatchesPage> {
         preferredSize: const Size.fromHeight(100.0),
         child: new Container(
           child: new Padding(
-            padding: EdgeInsets.only(top: 40.0, bottom: 40.0,),
+            padding: EdgeInsets.only(bottom: 40.0,),
             child: ScoreText(scoreKeeper: scoreKeeper)),
         ),
       ),
