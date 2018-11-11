@@ -66,9 +66,23 @@ class ScoreButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new RaisedButton (
-      child: new Text(team.name),
-      onPressed: () => scoreKeeper.score(matchTimer.elapsed, team),
+    return new AnimatedContainer (
+      duration : new Duration(milliseconds: 500),
+      child : new GestureDetector (
+        onTap : () => scoreKeeper.score(matchTimer.elapsed, team),
+        child: new Card (
+          color : team.background,
+          shape : CircleBorder(),
+          child : new Container (
+            width : 100,
+            height : 100,
+            child : new Padding(
+              padding : EdgeInsets.all(15),
+              child: new Image.asset(team.logoPath)
+            )
+          )
+        )
+      )
     );
   }
 }

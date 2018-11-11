@@ -19,8 +19,8 @@ class MatchState extends State<MatchesPage> {
 
   MatchState() {
     matchTimer = new MatchTimer(match: this);
-    Team team1 = new Team(name: "TeamA");
-    Team team2 = new Team(name: "TeamB");
+    Team team1 = new Team("TeamA", "assets/bristol_bears.png", Colors.black);
+    Team team2 = new Team("TeamB", "assets/bristol_bees.png", Colors.black);
     scoreKeeper = new ScoreKeeper(this, team1, team2);
   }
 
