@@ -17,7 +17,6 @@ class ScoreKeeper extends Manager {
   void score(Duration time, Team team) {
     new Goal(time, team);
     invalidate();
-    print(match.toJson());
   }
 
   List<Map<String, dynamic>> getGoals() => matchData.getGoals();
@@ -52,7 +51,7 @@ class ScoreTextState extends State<ScoreText> {
   }
 }
 
-class ScoreButton extends StatelessWidget {
+class ScoreButton extends StatefulWidget {
   const ScoreButton({
     Key key,
     @required this.scoreKeeper,
@@ -63,6 +62,18 @@ class ScoreButton extends StatelessWidget {
   final ScoreKeeper scoreKeeper;
   final MatchTimer matchTimer;
   final Team team;
+
+  @override
+  ScoreButtonState createState() => ScoreButtonState(scoreKeeper: scoreKeeper, matchTimer: matchTimer, team: team);
+}
+
+class ScoreButtonState extends State<ScoreButton> {
+
+  final ScoreKeeper scoreKeeper;
+  final MatchTimer matchTimer;
+  final Team team;
+
+  ScoreButtonState({this.scoreKeeper, this.matchTimer, this.team});
 
   @override
   Widget build(BuildContext context) {
