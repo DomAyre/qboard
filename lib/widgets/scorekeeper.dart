@@ -4,6 +4,7 @@ import '../data/match.dart';
 import '../widgets/timer.dart';
 import '../data/team.dart';
 import '../widgets/manager.dart';
+import '../common.dart';
 
 class ScoreKeeper extends Manager {
 
@@ -71,7 +72,16 @@ class ScoreButtonState extends State<ScoreButton> {
 
   final ScoreKeeper scoreKeeper;
   final MatchTimer matchTimer;
-  final Team team;
+  final Team team;  
+
+  SimpleDialog scoreDialog(context) => SimpleDialog (
+    contentPadding: EdgeInsets.all(24),
+    title: new Text("${team.name} Goal"),              
+    children: <Widget>[
+      Text("SCORER", style: headerStyle),
+      Text("ASSIST", style: headerStyle),
+    ]
+  );
 
   ScoreButtonState({this.scoreKeeper, this.matchTimer, this.team});
 
@@ -80,7 +90,10 @@ class ScoreButtonState extends State<ScoreButton> {
     return new AnimatedContainer (
       duration : new Duration(milliseconds: 500),
       child : new GestureDetector (
-        onTap : () => scoreKeeper.score(matchTimer.elapsed, team),
+        onTap : () => showDialog(
+          context: context,
+          builder: (BuildContext context) => scoreDialog(context) 
+        ),
         child: new Card (
           color : team.background,
           shape : CircleBorder(),
