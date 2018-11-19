@@ -33,7 +33,7 @@ class PlayerSelectorState extends State<PlayerSelector> {
 
   PlayerSelectorState({this.players});
 
-  Player getSelected() => players.firstWhere((player) => player.getFullName() == selected);
+  Player getSelected() => selected is String ? players.firstWhere((player) => player.getFullName() == selected) : null;
 
   @override
   Widget build(BuildContext context) {

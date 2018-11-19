@@ -7,9 +7,9 @@ class MatchTimer extends Stopwatch {
   final MatchState match;
   MatchTimer({this.match});
 
-  String _formatTime(int number) => number >= 10 ? "$number" : "0$number";
+  static String _formatTime(int number) => number >= 10 ? "$number" : "0$number";
 
-  String getTimeString() => "${this._formatTime(this.elapsed.inMinutes)}:${this._formatTime(this.elapsed.inSeconds.round().remainder(60))}";
+  static String getTimeString(Duration time) => "${MatchTimer._formatTime(time.inMinutes)}:${MatchTimer._formatTime(time.inSeconds.round().remainder(60))}";
 }
 
 class TimerText extends StatefulWidget {
@@ -34,7 +34,7 @@ class TimerTextState extends State<TimerText> {
 
   void updateTime(Timer timer) {
     setState(() {
-      timeText = matchTimer.getTimeString();
+      timeText = MatchTimer.getTimeString(matchTimer.elapsed);
     });
   }
 

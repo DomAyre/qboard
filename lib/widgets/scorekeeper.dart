@@ -16,10 +16,11 @@ class ScoreKeeper extends Manager {
     matchData = Match(team1: team1, team2: team2);
   }
 
-  void score(Duration time, Team team, [Player scorer, Player assist]) {
-    Goal goal = Goal(time, team);
+  void score({@required Duration time, @required Team team, Player scorer, Player assist}) {
+    Goal goal = Goal(time: time, team: team, scorer: scorer, assist: assist);
     if (scorer != null) scorer.goals.add(goal);
     if (assist != null) assist.assists.add(goal);
+    matchData.addEvent(goal);
     invalidate();
   }
 
@@ -86,16 +87,16 @@ class ScoreButtonState extends State<ScoreButton> {
       child : GestureDetector (
         onTap : () => showDialog(
           context: context,
-          builder: (BuildContext context) => new ScoreDialog(team: team, scoreKeeper: scoreKeeper, matchTimer: matchTimer)
+          builder: (BuildContext context) => new ScoreDialog(team: team, scoreKeeper: scoreKeeper, scoreTime: matchTimer.elapsed)
         ),
         child: Card (
           color : team.background,
           shape : CircleBorder(),
           child : Container (
-            width : 100,
-            height : 100,
+            width : 130,
+            height : 130,
             child : Padding(
-              padding : EdgeInsets.all(15),
+              padding : EdgeInsets.all(20),
               child: Image.asset(team.logoPath)
             )
           )
@@ -110,18 +111,20 @@ class ScoreDialog extends StatelessWidget {
     Key key,
     @required this.team,
     @required this.scoreKeeper,
-    @required this.matchTimer,
+    @required this.scoreTime,
   }) : super(key: key);
 
   final Team team;
   final ScoreKeeper scoreKeeper;
-  final MatchTimer matchTimer;
+  final Duration scoreTime;
 
   @override
   Widget build(BuildContext context) {
 
     GlobalKey scorerKey = new GlobalKey();
     GlobalKey assistKey = new GlobalKey();
+
+    
 
     return new SimpleDialog (
       contentPadding: EdgeInsets.all(24),
@@ -134,9 +137,9 @@ class ScoreDialog extends StatelessWidget {
         new FlatButton(
           child: new Text("SCORE"),
           onPressed: () {
-            scoreKeeper.score(matchTimer.elapsed, team, 
-              (scorerKey.currentState as PlayerSelectorState).getSelected(),
-              (assistKey.currentState as PlayerSelectorState).getSelected(),
+            scoreKeeper.score(time: scoreTime, team: team, 
+              scorer: (scorerKey.currentState as PlayerSelectorState).getSelected(),
+              assist: (assistKey.currentState as PlayerSelectorState).getSelected(),
             );
             return Navigator.pop(context);
           }
