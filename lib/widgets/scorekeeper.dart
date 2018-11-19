@@ -3,6 +3,7 @@ import '../pages/matches.dart';
 import '../data/match.dart';
 import '../widgets/timer.dart';
 import '../data/team.dart';
+import '../data/player.dart';
 import '../widgets/manager.dart';
 import '../common.dart';
 
@@ -12,11 +13,13 @@ class ScoreKeeper extends Manager {
   Match matchData;
 
   ScoreKeeper(this.match, team1, team2) {
-    matchData = new Match(team1: team1, team2: team2);
+    matchData = Match(team1: team1, team2: team2);
   }
 
-  void score(Duration time, Team team) {
-    new Goal(time, team);
+  void score(Duration time, Team team, [Player scorer, Player assist]) {
+    Goal goal = Goal(time, team);
+    if (scorer != null) scorer.goals.add(goal);
+    if (assist != null) assist.assists.add(goal);
     invalidate();
   }
 
@@ -43,7 +46,7 @@ class ScoreTextState extends State<ScoreText> {
 
   @override
   Widget build(BuildContext context) {
-    return new Text(
+    return Text(
       scoreKeeper.getScoreString(),
       style: TextStyle(
         color: Colors.white,
@@ -74,39 +77,71 @@ class ScoreButtonState extends State<ScoreButton> {
   final MatchTimer matchTimer;
   final Team team;  
 
-  SimpleDialog scoreDialog(context) => SimpleDialog (
-    contentPadding: EdgeInsets.all(24),
-    title: new Text("${team.name} Goal"),              
-    children: <Widget>[
-      Text("SCORER", style: headerStyle),
-      Text("ASSIST", style: headerStyle),
-    ]
-  );
-
   ScoreButtonState({this.scoreKeeper, this.matchTimer, this.team});
 
   @override
   Widget build(BuildContext context) {
-    return new AnimatedContainer (
-      duration : new Duration(milliseconds: 500),
-      child : new GestureDetector (
+    return AnimatedContainer (
+      duration : Duration(milliseconds: 500),
+      child : GestureDetector (
         onTap : () => showDialog(
           context: context,
-          builder: (BuildContext context) => scoreDialog(context) 
+          builder: (BuildContext context) => new ScoreDialog(team: team, scoreKeeper: scoreKeeper, matchTimer: matchTimer)
         ),
-        child: new Card (
+        child: Card (
           color : team.background,
           shape : CircleBorder(),
-          child : new Container (
+          child : Container (
             width : 100,
             height : 100,
-            child : new Padding(
+            child : Padding(
               padding : EdgeInsets.all(15),
-              child: new Image.asset(team.logoPath)
+              child: Image.asset(team.logoPath)
             )
           )
         )
       )
+    );
+  }
+}
+
+class ScoreDialog extends StatelessWidget {
+  const ScoreDialog({
+    Key key,
+    @required this.team,
+    @required this.scoreKeeper,
+    @required this.matchTimer,
+  }) : super(key: key);
+
+  final Team team;
+  final ScoreKeeper scoreKeeper;
+  final MatchTimer matchTimer;
+
+  @override
+  Widget build(BuildContext context) {
+
+    GlobalKey scorerKey = new GlobalKey();
+    GlobalKey assistKey = new GlobalKey();
+
+    return new SimpleDialog (
+      contentPadding: EdgeInsets.all(24),
+      title: new Text("${team.name} Goal"),              
+      children: <Widget>[
+        new Text("SCORER", style: headerStyle),
+        new PlayerSelector(key: scorerKey, players: team.players),
+        new Text("ASSIST", style: headerStyle),
+        new PlayerSelector(key: assistKey, players: team.players),
+        new FlatButton(
+          child: new Text("SCORE"),
+          onPressed: () {
+            scoreKeeper.score(matchTimer.elapsed, team, 
+              (scorerKey.currentState as PlayerSelectorState).getSelected(),
+              (assistKey.currentState as PlayerSelectorState).getSelected(),
+            );
+            return Navigator.pop(context);
+          }
+        )
+      ]
     );
   }
 }

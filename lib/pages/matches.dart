@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/timer.dart';
 import '../widgets/scorekeeper.dart';
 import '../data/team.dart';
+import '../data/player.dart';
 
 class MatchesPage extends StatefulWidget {
     MatchesPage({Key key, this.title}) : super(key: key);
@@ -21,6 +22,10 @@ class MatchState extends State<MatchesPage> {
     matchTimer = new MatchTimer(match: this);
     Team team1 = new Team("TeamA", "assets/bristol_bears.png", Colors.black);
     Team team2 = new Team("TeamB", "assets/bristol_bees.png", Colors.black);
+
+    team1.addPlayer(new Player(firstName: "Team", lastName: "One"));
+    team2.addPlayer(new Player(firstName: "Team", lastName: "Two"));
+    team2.addPlayer(new Player(firstName: "Team", lastName: "Three"));
     scoreKeeper = new ScoreKeeper(this, team1, team2);
   }
 

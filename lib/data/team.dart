@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './match.dart';
+import './player.dart';
 
 class Team {
 
@@ -7,8 +8,11 @@ class Team {
   String logoPath;
   Color background;
   List<Goal> goals = [];
+  List<Player> players = [];
 
   Team(this.name, this.logoPath, [this.background]);
 
   List<Map<String, dynamic>> getGoalsJson() => List.from(goals.map(Goal.toJson));
+
+  void addPlayer(Player player) => this.players.add(player);
 }
