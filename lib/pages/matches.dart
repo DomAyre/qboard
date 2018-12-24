@@ -20,10 +20,13 @@ class MatchState extends State<MatchesPage> {
   MatchTimer matchTimer;
   ScoreKeeper scoreKeeper;
 
+  Team team1;
+  Team team2;
+
   MatchState() {
     matchTimer = new MatchTimer(match: this);
-    Team team1 = new Team("TeamA", "assets/bristol_bears.png", Colors.black);
-    Team team2 = new Team("TeamB", "assets/bristol_bees.png", Colors.black);
+    team1 = new Team("TeamA", "assets/bristol_bears.png", Colors.black);
+    team2 = new Team("TeamB", "assets/bristol_bees.png", Colors.black);
 
     team1.addPlayer(new Player(firstName: "Player", lastName: "One"));
     team2.addPlayer(new Player(firstName: "Player", lastName: "Two"));
@@ -35,14 +38,42 @@ class MatchState extends State<MatchesPage> {
   Widget build(BuildContext context) {
 
     AppBar appBar = new AppBar(
-      title: new TimerText(matchTimer : matchTimer),
+      title: TimerText(matchTimer : matchTimer),
       centerTitle: true,
-      bottom: new PreferredSize(
+      bottom: PreferredSize(
         preferredSize: const Size.fromHeight(100.0),
-        child: new Container(
-          child: new Padding(
-            padding: EdgeInsets.only(bottom: 40.0,),
-            child: ScoreText(scoreKeeper: scoreKeeper)),
+        child: Padding (
+          padding: EdgeInsets.only(bottom: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Card (
+                color : team1.background,
+                shape : CircleBorder(),
+                child : Container (
+                  width : 75,
+                  height : 75,
+                  child : Padding(
+                    padding : EdgeInsets.all(10),
+                    child: Image.asset(team1.logoPath)
+                  )
+                )
+              ),
+              ScoreText(scoreKeeper: scoreKeeper),
+              Card (
+                color : team2.background,
+                shape : CircleBorder(),
+                child : Container (
+                  width : 75,
+                  height : 75,
+                  child : Padding(
+                    padding : EdgeInsets.all(10),
+                    child: Image.asset(team2.logoPath)
+                  )
+                )
+              ),
+            ],
+          )
         ),
       ),
     );

@@ -51,7 +51,7 @@ class ScoreTextState extends State<ScoreText> {
       scoreKeeper.getScoreString(),
       style: TextStyle(
         color: Colors.white,
-        fontSize: 40.0,
+        fontSize: 32.0,
       ));
   }
 }
