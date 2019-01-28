@@ -10,7 +10,8 @@ class QBoard extends StatelessWidget {
       title: 'QBoard',
       theme: new ThemeData(
         primaryColor: Colors.blueGrey[800],
-        accentColor: Colors.orange[600]
+        accentColor: Colors.orange[600],
+        fontFamily: 'NotoSans'
       ),
       home: new MatchesPage(title: 'QBoard'),
     );
