@@ -25,8 +25,8 @@ class MatchState extends State<MatchesPage> {
 
   MatchState() {
     matchTimer = new MatchTimer(match: this);
-    team1 = new Team("TeamA", "assets/bristol_bears.png", Colors.black);
-    team2 = new Team("TeamB", "assets/bristol_bees.png", Colors.black);
+    team1 = new Team("TeamA", "assets/bristol_bears.png", Colors.black, Colors.red);
+    team2 = new Team("TeamB", "assets/bristol_bees.png", Colors.black, Colors.yellow);
 
     team1.addPlayer(new Player(firstName: "Player", lastName: "One"));
     team2.addPlayer(new Player(firstName: "Player", lastName: "Two"));
@@ -84,8 +84,10 @@ class MatchState extends State<MatchesPage> {
         reverse: true,
         children: [
           new Container(
-            height: 250,
+            height: 200,
           ),
+          new BludgerControlSlider(scoreKeeper: scoreKeeper, matchTimer: matchTimer),
+          new Text("BLUDGER CONTROL", style: headerStyle, textAlign: TextAlign.center),
           new Row (
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[

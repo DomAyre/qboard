@@ -26,6 +26,17 @@ class ScoreKeeper extends Manager {
 
   List<Map<String, dynamic>> getGoals() => matchData.getGoals();
 
+  ControlState getBludgerControlState() => this.matchData.getBludgerControlState();
+
+  void setBludgerControlState({@required Duration time, @required ControlState newState}) {
+    ControlState currentState = getBludgerControlState();
+    if (currentState != newState) {
+      ControlChange controlChangeEvent = ControlChange(matchData: matchData, time: time, previousState: currentState, newState: newState);
+      matchData.addEvent(controlChangeEvent);
+      invalidate();
+    }
+  }
+
   String getScoreString() => "${matchData.team1Score()}0 - ${matchData.team2Score()}0";
 }
 
@@ -122,9 +133,7 @@ class ScoreDialog extends StatelessWidget {
   Widget build(BuildContext context) {
 
     GlobalKey scorerKey = new GlobalKey();
-    GlobalKey assistKey = new GlobalKey();
-
-    
+    GlobalKey assistKey = new GlobalKey();   
 
     return new SimpleDialog (
       contentPadding: EdgeInsets.all(24),
@@ -145,6 +154,43 @@ class ScoreDialog extends StatelessWidget {
           }
         )
       ]
+    );
+  }
+}
+
+class BludgerControlSlider extends StatefulWidget {
+
+  const BludgerControlSlider({
+    Key key,
+    @required this.scoreKeeper,
+    @required this.matchTimer,
+  }) : super(key: key);
+  
+  final ScoreKeeper scoreKeeper;
+  final MatchTimer matchTimer;
+
+  @override
+  BludgerControlSliderState createState() {
+    return new BludgerControlSliderState(scoreKeeper: scoreKeeper, matchTimer: matchTimer);
+  }
+}
+
+class BludgerControlSliderState extends State<BludgerControlSlider> {
+
+  final ScoreKeeper scoreKeeper;
+  final MatchTimer matchTimer;
+  double sliderValue = 1.0;
+
+  BludgerControlSliderState({@required this.scoreKeeper, @required this.matchTimer});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+      child: new Slider(value: sliderValue, min: 0, max: 2, divisions: 2,
+        onChanged: (newState) => setState(() {sliderValue = newState;}),
+        onChangeEnd: (newState) => scoreKeeper.setBludgerControlState(time: matchTimer.elapsed, newState: ControlState.values[newState.toInt()]),
+      ),
     );
   }
 }

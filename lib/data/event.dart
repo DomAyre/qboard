@@ -5,6 +5,7 @@ import '../widgets/timer.dart';
 abstract class MatchEvent {
 
   Duration time;
+  String symbolPath;
 
   String toString();
 }
@@ -53,9 +54,13 @@ class EventText extends StatelessWidget {
       padding: EdgeInsets.only(top: 25, left: 35, right: 35),
       child: new Row (
         children: [
-          new Padding (
-            padding: EdgeInsets.only(right: 20),
-            child : new FlutterLogo(size: 20.0),
+          Container(
+            width: 50,
+            height: 50,
+            child: new Padding (
+              padding: EdgeInsets.only(right: 20),
+              child : Image.asset(event.symbolPath),
+            ),
           ),
           new Expanded ( 
             child : new Column (

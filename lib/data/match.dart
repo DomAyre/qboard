@@ -20,10 +20,19 @@ class Match {
   Queue<MatchEvent> getEvents() => this.matchEvents;
 
   List<Map<String, dynamic>> getGoals() => team1.getGoalsJson() + team2.getGoalsJson();
+
+  ControlState getBludgerControlState() {
+    Iterable<ControlChange> controlChanges = this.getEvents().whereType<ControlChange>();
+    if (controlChanges.isNotEmpty) {
+      return controlChanges.last.getNewState();
+    }
+    else return ControlState.NoTeamControl;
+  }
 }
 
 class Goal extends MatchEvent {
 
+  String symbolPath = "assets/goal_scored_symbol.png";
   Duration time;
   Team team;
   Player scorer;
@@ -49,4 +58,31 @@ class Goal extends MatchEvent {
 
     return goalString;
   }
+}
+
+enum ControlState {Team1Control, NoTeamControl, Team2Control}
+
+class ControlChange extends MatchEvent {
+
+  String symbolPath = "assets/bludger_control_symbol.png";
+  Match matchData;
+  Duration time;
+  ControlState newState;
+  ControlState previousState;
+
+  ControlChange({@required this.matchData, @required this.time, @required this.previousState, @required this.newState});
+
+  String toString() {
+    switch (newState) {
+      case ControlState.Team1Control: return "${matchData.team1.name} wins bludger control";
+      case ControlState.Team2Control: return "${matchData.team2.name} wins bludger control";
+      case ControlState.NoTeamControl: {
+        Team previousTeamControl = previousState == ControlState.Team1Control ? matchData.team1 : matchData.team2;
+        return "${previousTeamControl.name} loses bludger control";
+      }
+    }
+    return "";
+  }
+
+  ControlState getNewState() => this.newState;
 }

@@ -7,10 +7,11 @@ class Team {
   String name;
   String logoPath;
   Color background;
+  Color foreground;
   List<Goal> goals = [];
   List<Player> players = [];
 
-  Team(this.name, this.logoPath, [this.background]);
+  Team(this.name, this.logoPath, [this.background, this.foreground]);
 
   List<Map<String, dynamic>> getGoalsJson() => List.from(goals.map(Goal.toJson));
 

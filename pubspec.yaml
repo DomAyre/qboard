@@ -30,6 +30,10 @@ flutter:
    - assets/logo.png
    - assets/bristol_bears.png
    - assets/bristol_bees.png
+   - assets/goal_scored_symbol.png
+   - assets/bludger_control_symbol.png
+   - assets/card_symbol.png
+   - assets/snitch_catch_symbol.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
