@@ -186,10 +186,18 @@ class BludgerControlSliderState extends State<BludgerControlSlider> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-      child: new Slider(value: sliderValue, min: 0, max: 2, divisions: 2,
-        onChanged: (newState) => setState(() {sliderValue = newState;}),
-        onChangeEnd: (newState) => scoreKeeper.setBludgerControlState(time: matchTimer.elapsed, newState: ControlState.values[newState.toInt()]),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      child: SliderTheme(
+        data: SliderTheme.of(context).copyWith(
+          trackHeight: 8,
+          thumbShape: RoundSliderThumbShape(enabledThumbRadius: 15),
+          tickMarkShape: SliderTickMarkShape.noTickMark,
+          thumbColor: Colors.red[900]
+        ),
+        child: new Slider(value: sliderValue, min: 0, max: 2, divisions: 2,
+          onChanged: (newState) => setState(() {sliderValue = newState;}),
+          onChangeEnd: (newState) => scoreKeeper.setBludgerControlState(time: matchTimer.elapsed, newState: ControlState.values[newState.toInt()]),
+        ),
       ),
     );
   }
