@@ -19,18 +19,18 @@ class TimerText extends StatefulWidget {
   TimerText({this.matchTimer});
 
   @override
-  TimerTextState createState() => new TimerTextState(matchTimer : matchTimer); 
+  TimerTextState createState() => TimerTextState(matchTimer : matchTimer); 
 }
 
 class TimerTextState extends State<TimerText> {
 
   final MatchTimer matchTimer;
-  final refreshFrequency = new Duration(milliseconds : 100);
+  final refreshFrequency = Duration(milliseconds : 100);
 
   String timeText = "00:00";
 
   TimerTextState({this.matchTimer}) {
-    new Timer.periodic(refreshFrequency, updateTime);
+    Timer.periodic(refreshFrequency, updateTime);
   }
 
   void updateTime(Timer timer) {
@@ -41,7 +41,7 @@ class TimerTextState extends State<TimerText> {
 
   @override
   Widget build(BuildContext context) { 
-    return new Text(timeText);
+    return Text(timeText);
   }
 }
 
@@ -51,7 +51,7 @@ class TimerPlayPause extends StatefulWidget {
   TimerPlayPause({this.matchTimer});
 
   @override
-  TimerPlayPauseState createState() => new TimerPlayPauseState(matchTimer: matchTimer); 
+  TimerPlayPauseState createState() => TimerPlayPauseState(matchTimer: matchTimer); 
 }
 
 class TimerPlayPauseState extends State<TimerPlayPause> {
@@ -71,7 +71,7 @@ class TimerPlayPauseState extends State<TimerPlayPause> {
 
   @override
   Widget build(BuildContext context) {
-    return new IconButton(
+    return IconButton(
       icon: Icon(isTimerRunning ? Icons.pause : Icons.play_arrow),
       onPressed: buttonPressed,
     );

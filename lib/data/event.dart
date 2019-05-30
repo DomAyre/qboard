@@ -20,7 +20,7 @@ class EventStream extends StatefulWidget {
 
   @override
   EventStreamState createState() {
-    return new EventStreamState();
+    return EventStreamState();
   }
 }
 
@@ -28,11 +28,11 @@ class EventStreamState extends State<EventStream> {
   @override
   Widget build(BuildContext context) {
     this.widget.scoreKeeper.register(this);
-    return new Padding (
+    return Padding (
       padding: EdgeInsets.only(bottom: 30),
-      child: new Column (
+      child: Column (
         children: this.widget.scoreKeeper.matchData.getEvents().map((MatchEvent event) => 
-          new EventText(event: event)
+          EventText(event: event)
         ).toList()
       ),
     );
@@ -50,24 +50,24 @@ class EventText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Padding (
+    return Padding (
       padding: EdgeInsets.only(top: 25, left: 35, right: 35),
-      child: new Row (
+      child: Row (
         children: [
           Container(
             width: 50,
             height: 50,
-            child: new Padding (
+            child: Padding (
               padding: EdgeInsets.only(right: 20),
               child : Image.asset(event.symbolPath),
             ),
           ),
-          new Expanded ( 
-            child : new Column (
+          Expanded ( 
+            child : Column (
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                   Text(MatchTimer.getTimeString(event.time), textAlign: TextAlign.left, style: TextStyle(fontWeight: FontWeight.bold)),
-                  new Container (
+                  Container (
                     child: Text(event.toString(), textAlign: TextAlign.left, style: TextStyle(fontSize: 18))
                   )
               ]

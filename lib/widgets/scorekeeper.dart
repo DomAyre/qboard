@@ -98,7 +98,7 @@ class ScoreButtonState extends State<ScoreButton> {
       child : GestureDetector (
         onTap : () => showDialog(
           context: context,
-          builder: (BuildContext context) => new ScoreDialog(team: team, scoreKeeper: scoreKeeper, scoreTime: matchTimer.elapsed)
+          builder: (BuildContext context) => ScoreDialog(team: team, scoreKeeper: scoreKeeper, scoreTime: matchTimer.elapsed)
         ),
         child: Card (
           color : team.background,
@@ -132,19 +132,19 @@ class ScoreDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    GlobalKey scorerKey = new GlobalKey();
-    GlobalKey assistKey = new GlobalKey();   
+    GlobalKey scorerKey = GlobalKey();
+    GlobalKey assistKey = GlobalKey();   
 
-    return new SimpleDialog (
+    return SimpleDialog (
       contentPadding: EdgeInsets.all(24),
-      title: new Text("${team.name} Goal"),              
+      title: Text("${team.name} Goal"),              
       children: <Widget>[
-        new Text("SCORER", style: headerStyle),
-        new PlayerSelector(key: scorerKey, players: team.players),
-        new Text("ASSIST", style: headerStyle),
-        new PlayerSelector(key: assistKey, players: team.players),
-        new FlatButton(
-          child: new Text("SCORE"),
+        Text("SCORER", style: headerStyle),
+        PlayerSelector(key: scorerKey, players: team.players),
+        Text("ASSIST", style: headerStyle),
+        PlayerSelector(key: assistKey, players: team.players),
+        FlatButton(
+          child: Text("SCORE"),
           onPressed: () {
             scoreKeeper.score(time: scoreTime, team: team, 
               scorer: (scorerKey.currentState as PlayerSelectorState).getSelected(),
@@ -171,7 +171,7 @@ class BludgerControlSlider extends StatefulWidget {
 
   @override
   BludgerControlSliderState createState() {
-    return new BludgerControlSliderState(scoreKeeper: scoreKeeper, matchTimer: matchTimer);
+    return BludgerControlSliderState(scoreKeeper: scoreKeeper, matchTimer: matchTimer);
   }
 }
 
@@ -194,7 +194,7 @@ class BludgerControlSliderState extends State<BludgerControlSlider> {
           tickMarkShape: SliderTickMarkShape.noTickMark,
           thumbColor: Colors.red[900]
         ),
-        child: new Slider(value: sliderValue, min: 0, max: 2, divisions: 2,
+        child: Slider(value: sliderValue, min: 0, max: 2, divisions: 2,
           onChanged: (newState) => setState(() {sliderValue = newState;}),
           onChangeEnd: (newState) => scoreKeeper.setBludgerControlState(time: matchTimer.elapsed, newState: ControlState.values[newState.toInt()]),
         ),

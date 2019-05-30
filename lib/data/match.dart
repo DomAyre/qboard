@@ -8,7 +8,7 @@ class Match {
 
   Team team1;
   Team team2;
-  Queue<MatchEvent> matchEvents = new Queue();
+  Queue<MatchEvent> matchEvents = Queue();
 
   Match({this.team1, this.team2});
 
