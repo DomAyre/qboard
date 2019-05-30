@@ -9,7 +9,8 @@ class MatchTimer extends Stopwatch {
 
   static String _formatTime(int number) => number >= 10 ? "$number" : "0$number";
 
-  static String getTimeString(Duration time) => "${MatchTimer._formatTime(time.inMinutes)}:${MatchTimer._formatTime(time.inSeconds.round().remainder(60))}";
+  static String getTimeString(Duration time) => 
+    "${MatchTimer._formatTime(time.inMinutes)}:${MatchTimer._formatTime(time.inSeconds.round().remainder(60))}";
 }
 
 class TimerText extends StatefulWidget {
@@ -26,7 +27,7 @@ class TimerTextState extends State<TimerText> {
   final MatchTimer matchTimer;
   final refreshFrequency = new Duration(milliseconds : 100);
 
-  String timeText;
+  String timeText = "00:00";
 
   TimerTextState({this.matchTimer}) {
     new Timer.periodic(refreshFrequency, updateTime);
