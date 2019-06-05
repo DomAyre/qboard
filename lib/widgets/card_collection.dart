@@ -20,7 +20,10 @@ class CardCollection extends StatelessWidget {
   tapCallback(ClippedDialogState tappedCard) {
     
     if (selectedCard != null) {
-      selectedCard.setState(() {selectedCard.widget.isShown = false;});
+      selectedCard.setState(() {
+        selectedCard.widget.isShown = false;
+        (selectedCard.widget.child as FoulCard).clearCard();
+      });
     }
     selectedCard = tappedCard;
     selectedCard.setState(() {selectedCard.widget.isShown = true;});

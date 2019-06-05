@@ -20,7 +20,11 @@ class FoulCard extends StatefulWidget {
     @required this.cardType, 
     @required this.teams, 
     @required this.parent
-  });
+  }) : super(key: GlobalKey());
+
+  clearCard() {
+    ((key as GlobalKey).currentState as _FoulCardState).clearCard();
+  }
 
   @override
   _FoulCardState createState() => _FoulCardState(
@@ -48,7 +52,7 @@ class _FoulCardState extends State<FoulCard> {
   GlobalKey fouler = GlobalKey();
   GlobalKey foul = GlobalKey();
 
-  submitFunction() {
+  giveCard() {
       parent.scoreKeeper.giveCard(
         time: parent.matchTimer.elapsed,
         fouler: selectedPlayer,
@@ -56,6 +60,15 @@ class _FoulCardState extends State<FoulCard> {
         cardType: card.cardType
       );
       parent.setState(() {(parent.fadeBackgroundKey.currentState as FadeBackgroundState).isFaded = false;});
+      clearCard();
+  }
+
+  clearCard() {
+    setState(() {
+        selectedTeam = null;
+        selectedPlayer = null;
+        selectedFoul = null;
+      });
   }
 
   _FoulCardState({
@@ -123,7 +136,7 @@ class _FoulCardState extends State<FoulCard> {
           Container(height: 5),
           FlatButton(
             child: Text("SUBMIT", style: headerStyle, textAlign: TextAlign.right,), 
-            onPressed: selectedPlayer != null && selectedFoul != null ? submitFunction : null,
+            onPressed: selectedPlayer != null && selectedFoul != null ? giveCard : null,
           )
         ],
       ),

@@ -17,14 +17,6 @@ class ClippedDialog extends StatefulWidget {
 
   @override
   ClippedDialogState createState() => ClippedDialogState();
-
-  show() {
-    this.isShown = true;
-  }
-
-  hide() {
-    this.isShown = false;
-  }
 }
 
 class ClippedDialogState extends State<ClippedDialog> {

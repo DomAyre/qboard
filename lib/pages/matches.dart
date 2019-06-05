@@ -5,6 +5,7 @@ import 'package:qboard/data/fouls.dart';
 import 'package:qboard/widgets/card_collection.dart';
 import 'package:qboard/widgets/clipped_dialog.dart';
 import 'package:qboard/widgets/fade_background.dart';
+import 'package:qboard/widgets/foul_card.dart';
 import '../widgets/timer.dart';
 import '../widgets/scorekeeper.dart';
 import '../data/team.dart';
@@ -128,6 +129,7 @@ class MatchState extends State<MatchesPage> {
               if (current != null) {
                 current.setState(() {
                   current.widget.isShown = false;
+                  (current.widget.child as FoulCard).clearCard();
                 });
               }
             }
