@@ -96,30 +96,47 @@ class MatchState extends State<MatchesPage> {
             alignment: Alignment.center,
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: 700),
-              child: ListView(
-                reverse: true,
-                children: [
-                  Container(height: 80),
-                  Text("CARDS", style: headerStyle, textAlign: TextAlign.center),
-                  BludgerControlSlider(scoreKeeper: scoreKeeper, matchTimer: matchTimer),
-                  Text("BLUDGER CONTROL", style: headerStyle, textAlign: TextAlign.center),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      ScoreButton(
-                          scoreKeeper: scoreKeeper,
-                          matchTimer: matchTimer,
-                          team: scoreKeeper.matchData.team1),
-                      TimerPlayPause(matchTimer: matchTimer),
-                      ScoreButton(
-                          scoreKeeper: scoreKeeper,
-                          matchTimer: matchTimer,
-                          team: scoreKeeper.matchData.team2),
-                    ],
-                  ),
-                  Text("GOALS", style: headerStyle, textAlign: TextAlign.center),
-                  EventStream(scoreKeeper: scoreKeeper),
-                ],
+              child: NotificationListener<ScrollNotification>(onNotification: (notification) {
+                CardCollectionState collectionState = cardCollectionKey.currentState;
+                  List<GlobalKey> cardKeys = [
+                    collectionState.blueCardKey,
+                    collectionState.yellowCardKey,
+                    collectionState.redCardKey,
+                  ];
+                  for (GlobalKey cardKey in cardKeys) {
+                    ClippedDialogState cardState = cardKey.currentState;
+                    if (cardState != null) {
+                      cardState.setState(() {
+                        cardState.offset = notification.metrics.extentBefore;
+                      });
+                    }
+                  }
+                },
+                child: ListView(
+                  reverse: true,
+                  children: [
+                    Container(height: 80),
+                    Text("CARDS", style: headerStyle, textAlign: TextAlign.center),
+                    BludgerControlSlider(scoreKeeper: scoreKeeper, matchTimer: matchTimer),
+                    Text("BLUDGER CONTROL", style: headerStyle, textAlign: TextAlign.center),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        ScoreButton(
+                            scoreKeeper: scoreKeeper,
+                            matchTimer: matchTimer,
+                            team: scoreKeeper.matchData.team1),
+                        TimerPlayPause(matchTimer: matchTimer),
+                        ScoreButton(
+                            scoreKeeper: scoreKeeper,
+                            matchTimer: matchTimer,
+                            team: scoreKeeper.matchData.team2),
+                      ],
+                    ),
+                    Text("GOALS", style: headerStyle, textAlign: TextAlign.center),
+                    EventStream(scoreKeeper: scoreKeeper),
+                  ],
+                ),
               ),
             ),
           ),

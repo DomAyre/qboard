@@ -24,6 +24,9 @@ class CardCollection extends StatefulWidget {
 class CardCollectionState extends State<CardCollection> {
 
   ClippedDialogState selectedCard;
+  GlobalKey blueCardKey = GlobalKey();
+  GlobalKey yellowCardKey = GlobalKey();
+  GlobalKey redCardKey = GlobalKey();
 
   tapCallback(ClippedDialogState tappedCard) {
     
@@ -50,6 +53,7 @@ class CardCollectionState extends State<CardCollection> {
         child: Stack(
           children: [
             ClippedDialog(
+              key: blueCardKey,
               onTapped: tapCallback,
               edgeAlignment: 0.8,
               color: cardTypeColor[CardType.Red],
@@ -60,6 +64,7 @@ class CardCollectionState extends State<CardCollection> {
               )
             ),
             ClippedDialog(
+              key: yellowCardKey,
               onTapped: tapCallback,
               edgeAlignment: 0.0,
               color: cardTypeColor[CardType.Yellow],
@@ -70,6 +75,7 @@ class CardCollectionState extends State<CardCollection> {
               )
             ),
             ClippedDialog(
+              key: redCardKey,
               onTapped: tapCallback,
               edgeAlignment: -0.8,
               color: cardTypeColor[CardType.Blue],

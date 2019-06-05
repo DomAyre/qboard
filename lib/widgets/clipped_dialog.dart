@@ -9,12 +9,13 @@ class ClippedDialog extends StatefulWidget {
   final Widget child;
   final Function onTapped;
 
-  const ClippedDialog({
+  ClippedDialog({
+    GlobalKey key,
     @required this.edgeAlignment,
     @required this.color,
     @required this.child,
     @required this.onTapped,
-  });
+  }) : super(key: key);
 
   @override
   ClippedDialogState createState() => ClippedDialogState();
@@ -22,8 +23,9 @@ class ClippedDialog extends StatefulWidget {
 
 class ClippedDialogState extends State<ClippedDialog> {
 
+  double offset = 0;
   bool isShown = false;
-  
+
   @override
   Widget build(BuildContext context) {
 
@@ -39,7 +41,7 @@ class ClippedDialogState extends State<ClippedDialog> {
     return Align(
       alignment: isShown? Alignment(0.0, 0.0) : Alignment(widget.edgeAlignment, 1.0),
       child: Transform.translate(
-        offset: Offset(0.0, isShown? 0.0 : 370),
+        offset: Offset(0.0, isShown? 0.0 : 370 + offset),
         child: GestureDetector(
           onTap: () => {
             widget.onTapped(this),
