@@ -18,9 +18,11 @@ class PlayerSelector extends StatefulWidget {
   PlayerSelector({
     Key key,
     @required this.players,
+    this.onChanged
   }) : super(key: key);
 
-  final List<Player> players;
+  List<Player> players;
+  VoidCallback onChanged;
 
   @override
   PlayerSelectorState createState() => PlayerSelectorState(players: players);
@@ -28,24 +30,23 @@ class PlayerSelector extends StatefulWidget {
 
 class PlayerSelectorState extends State<PlayerSelector> {
 
-  final List<Player> players;
-  String selected;
+  List<Player> players;
+  Player selected;
 
   PlayerSelectorState({this.players});
-
-  Player getSelected() => selected is String ? players.firstWhere((player) => player.getFullName() == selected) : null;
 
   @override
   Widget build(BuildContext context) {
     return DropdownButton (
-      value: selected is String ? selected : null,
+      value: selected,
       items: players.map((player) => DropdownMenuItem (
           child: Text(player.getFullName()),
-          value: player.getFullName(),
+          value: player,
         )
       ).toList(),
       onChanged: (newValue) {
         setState(() {selected = newValue;});
+        widget.onChanged();
       },
       isExpanded: true,
     );

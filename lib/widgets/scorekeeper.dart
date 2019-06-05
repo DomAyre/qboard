@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qboard/data/fouls.dart';
 import '../pages/matches.dart';
 import '../data/match.dart';
 import '../widgets/timer.dart';
@@ -21,6 +22,19 @@ class ScoreKeeper extends Manager {
     if (scorer != null) scorer.goals.add(goal);
     if (assist != null) assist.assists.add(goal);
     matchData.addEvent(goal);
+    invalidate();
+  }
+
+  void giveCard({@required Duration time, @required Player fouler, @required Foul foul, @required CardType cardType}) {
+    FoulEvent foulEvent = FoulEvent(
+      time: time,
+      fouler: fouler,
+      foul: foul,
+      cardType: cardType, 
+    );
+
+    // if (fouler != null) fouler
+    matchData.addEvent(foulEvent);
     invalidate();
   }
 
@@ -147,8 +161,8 @@ class ScoreDialog extends StatelessWidget {
           child: Text("SCORE"),
           onPressed: () {
             scoreKeeper.score(time: scoreTime, team: team, 
-              scorer: (scorerKey.currentState as PlayerSelectorState).getSelected(),
-              assist: (assistKey.currentState as PlayerSelectorState).getSelected(),
+              scorer: (scorerKey.currentState as PlayerSelectorState).selected,
+              assist: (assistKey.currentState as PlayerSelectorState).selected,
             );
             return Navigator.pop(context);
           }

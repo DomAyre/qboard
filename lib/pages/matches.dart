@@ -1,4 +1,10 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:qboard/data/fouls.dart';
+import 'package:qboard/widgets/card_collection.dart';
+import 'package:qboard/widgets/clipped_dialog.dart';
+import 'package:qboard/widgets/fade_background.dart';
 import '../widgets/timer.dart';
 import '../widgets/scorekeeper.dart';
 import '../data/team.dart';
@@ -15,6 +21,12 @@ class MatchesPage extends StatefulWidget {
   MatchState createState() => MatchState();
 }
 
+Map<CardType, Color> cardTypeColor = {
+  CardType.Blue: Colors.blue,
+  CardType.Yellow: Colors.yellow,
+  CardType.Red: Colors.red
+};
+
 class MatchState extends State<MatchesPage> {
 
   MatchTimer matchTimer;
@@ -23,9 +35,12 @@ class MatchState extends State<MatchesPage> {
   Team team1;
   Team team2;
 
+  GlobalKey fadeBackgroundKey = GlobalKey();
+  GlobalKey cardCollectionKey = GlobalKey();
+
   MatchState() {
     matchTimer = MatchTimer(match: this);
-    team1 = Team("TeamA", "assets/bristol_bears.png", Colors.black, Colors.red);
+    team1 = Team("Bristol QC", "assets/bristol_bears.png", Colors.black, Colors.red);
     team2 = Team("TeamB", "assets/bristol_bees.png", Colors.black, Colors.yellow);
 
     team1.addPlayer(Player(firstName: "Player", lastName: "One"));
@@ -74,43 +89,50 @@ class MatchState extends State<MatchesPage> {
     return Scaffold(
       appBar: appBar,
       body: Stack(
+        fit: StackFit.expand,
         children: [
-          ListView(
-            reverse: true,
-            children: [
-              Container(
-                height: 200,
-              ),
-              BludgerControlSlider(
-                  scoreKeeper: scoreKeeper, matchTimer: matchTimer),
-              Text("BLUDGER CONTROL",
-                  style: headerStyle, textAlign: TextAlign.center),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  ScoreButton(
-                      scoreKeeper: scoreKeeper,
-                      matchTimer: matchTimer,
-                      team: scoreKeeper.matchData.team1),
-                  TimerPlayPause(matchTimer: matchTimer),
-                  ScoreButton(
-                      scoreKeeper: scoreKeeper,
-                      matchTimer: matchTimer,
-                      team: scoreKeeper.matchData.team2),
+          Align(
+            alignment: Alignment.center,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 700),
+              child: ListView(
+                reverse: true,
+                children: [
+                  Container(height: 80),
+                  Text("CARDS", style: headerStyle, textAlign: TextAlign.center),
+                  BludgerControlSlider(scoreKeeper: scoreKeeper, matchTimer: matchTimer),
+                  Text("BLUDGER CONTROL", style: headerStyle, textAlign: TextAlign.center),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      ScoreButton(
+                          scoreKeeper: scoreKeeper,
+                          matchTimer: matchTimer,
+                          team: scoreKeeper.matchData.team1),
+                      TimerPlayPause(matchTimer: matchTimer),
+                      ScoreButton(
+                          scoreKeeper: scoreKeeper,
+                          matchTimer: matchTimer,
+                          team: scoreKeeper.matchData.team2),
+                    ],
+                  ),
+                  Text("GOALS", style: headerStyle, textAlign: TextAlign.center),
+                  EventStream(scoreKeeper: scoreKeeper),
                 ],
               ),
-              Text("GOALS", style: headerStyle, textAlign: TextAlign.center),
-              EventStream(scoreKeeper: scoreKeeper),
-            ],
-          ),
-          Positioned(              
-            bottom: 80,
-            left: 20,
-            child: Card(
-              color: Colors.red,
-              child: Text("This is a card"), 
             ),
-          )
+          ),
+          FadeBackground(key: fadeBackgroundKey, isFaded: false, 
+            onTapped: () {
+              ClippedDialogState current = (cardCollectionKey.currentWidget as CardCollection).selectedCard;
+              if (current != null) {
+                current.setState(() {
+                  current.widget.isShown = false;
+                });
+              }
+            }
+          ),
+          CardCollection(key: cardCollectionKey, fadeBackground: fadeBackgroundKey, matchState: this)
         ]
       ),
     );
@@ -137,3 +159,5 @@ class MatchState extends State<MatchesPage> {
 
   void startTimer() => matchTimer.start();
 }
+
+

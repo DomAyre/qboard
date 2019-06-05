@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qboard/data/fouls.dart';
 import './team.dart';
 import './player.dart';
 import './event.dart';
@@ -85,4 +86,25 @@ class ControlChange extends MatchEvent {
   }
 
   ControlState getNewState() => this.newState;
+}
+
+class FoulEvent extends MatchEvent {
+
+  String symbolPath = "assets/card_symbol.png";
+  Duration time;
+  Player fouler;
+  Foul foul;
+  CardType cardType;
+
+  FoulEvent({
+    @required this.time, 
+    @required this.fouler,
+    @required this.foul,
+    @required this.cardType,
+  });
+
+  String toString() {
+    return "${this.fouler.getFullName()} given a ${this.cardType.toString().split(".").last} Card for ${this.foul.name}";
+  }
+  
 }
