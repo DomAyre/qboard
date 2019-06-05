@@ -6,8 +6,9 @@ import 'package:qboard/widgets/fade_background.dart';
 import 'clipped_dialog.dart';
 import 'foul_card.dart';
 
-class CardCollection extends StatelessWidget {
-  CardCollection({
+class CardCollection extends StatefulWidget {
+  
+  const CardCollection({
     Key key,
     @required this.fadeBackground,
     @required this.matchState,
@@ -15,21 +16,28 @@ class CardCollection extends StatelessWidget {
 
   final GlobalKey fadeBackground;
   final MatchState matchState;
+
+  @override
+  CardCollectionState createState() => CardCollectionState();
+}
+
+class CardCollectionState extends State<CardCollection> {
+
   ClippedDialogState selectedCard;
 
   tapCallback(ClippedDialogState tappedCard) {
     
     if (selectedCard != null) {
       selectedCard.setState(() {
-        selectedCard.widget.isShown = false;
+        selectedCard.isShown = false;
         (selectedCard.widget.child as FoulCard).clearCard();
       });
     }
     selectedCard = tappedCard;
-    selectedCard.setState(() {selectedCard.widget.isShown = true;});
+    selectedCard.setState(() {selectedCard.isShown = true;});
 
-    fadeBackground.currentState.setState(() {
-      (fadeBackground.currentState as FadeBackgroundState).isFaded = true;
+    widget.fadeBackground.currentState.setState(() {
+      (widget.fadeBackground.currentState as FadeBackgroundState).isFaded = true;
     });
   }
 
@@ -46,9 +54,9 @@ class CardCollection extends StatelessWidget {
               edgeAlignment: 0.8,
               color: cardTypeColor[CardType.Red],
               child: FoulCard(
-                parent: matchState,
+                parent: widget.matchState,
                 cardType: CardType.Red,
-                teams: [matchState.team1, matchState.team2],
+                teams: [widget.matchState.team1, widget.matchState.team2],
               )
             ),
             ClippedDialog(
@@ -56,9 +64,9 @@ class CardCollection extends StatelessWidget {
               edgeAlignment: 0.0,
               color: cardTypeColor[CardType.Yellow],
               child: FoulCard(
-                parent: matchState,
+                parent: widget.matchState,
                 cardType: CardType.Yellow,
-                teams: [matchState.team1, matchState.team2],
+                teams: [widget.matchState.team1, widget.matchState.team2],
               )
             ),
             ClippedDialog(
@@ -66,9 +74,9 @@ class CardCollection extends StatelessWidget {
               edgeAlignment: -0.8,
               color: cardTypeColor[CardType.Blue],
               child: FoulCard(
-                parent: matchState,
+                parent: widget.matchState,
                 cardType: CardType.Blue,
-                teams: [matchState.team1, matchState.team2],
+                teams: [widget.matchState.team1, widget.matchState.team2],
               )
             ),
           ]

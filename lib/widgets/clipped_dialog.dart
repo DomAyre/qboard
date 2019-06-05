@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'foul_card.dart';
+
 class ClippedDialog extends StatefulWidget {
   
-  bool isShown = false;
-  double edgeAlignment;
-  Color color;
-  Widget child;
-  Function onTapped;
+  final double edgeAlignment;
+  final Color color;
+  final Widget child;
+  final Function onTapped;
 
-  ClippedDialog({
+  const ClippedDialog({
     @required this.edgeAlignment,
     @required this.color,
     @required this.child,
@@ -20,25 +21,36 @@ class ClippedDialog extends StatefulWidget {
 }
 
 class ClippedDialogState extends State<ClippedDialog> {
+
+  bool isShown = false;
   
   @override
   Widget build(BuildContext context) {
 
+    GlobalKey childWidgetKey = widget.child.key;
+    if (childWidgetKey.currentState != null) {
+      (childWidgetKey.currentState as FoulCardState).setOnSubmit(() {
+        setState(() {
+          isShown = false;
+        });
+      });
+    }
+
     return Align(
-      alignment: widget.isShown? Alignment(0.0, 0.0) : Alignment(widget.edgeAlignment, 1.0),
+      alignment: isShown? Alignment(0.0, 0.0) : Alignment(widget.edgeAlignment, 1.0),
       child: Transform.translate(
-        offset: Offset(0.0, widget.isShown? 0.0 : 370),
+        offset: Offset(0.0, isShown? 0.0 : 370),
         child: GestureDetector(
           onTap: () => {
             widget.onTapped(this),
           },
           child: Card(
             color: widget.color,
-            elevation: widget.isShown ? 30 : 3,
+            elevation: isShown ? 30 : 3,
             child: Opacity(
-              opacity: widget.isShown ? 1.0 : 0.0,
+              opacity: isShown ? 1.0 : 0.0,
               child: Container(
-                width: widget.isShown ? 320 : 220,
+                width: isShown ? 320 : 220,
                 height: 420,
                 child: widget.child
               )

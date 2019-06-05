@@ -10,10 +10,9 @@ import '../common.dart';
 
 class FoulCard extends StatefulWidget {
 
-  CardType cardType;
-  List<Team> teams;
-  MatchState parent;
-  bool isShown;
+  final CardType cardType;
+  final List<Team> teams;
+  final MatchState parent;
 
   FoulCard({
     Key key, 
@@ -23,11 +22,11 @@ class FoulCard extends StatefulWidget {
   }) : super(key: GlobalKey());
 
   clearCard() {
-    ((key as GlobalKey).currentState as _FoulCardState).clearCard();
+    ((key as GlobalKey).currentState as FoulCardState).clearCard();
   }
 
   @override
-  _FoulCardState createState() => _FoulCardState(
+  FoulCardState createState() => FoulCardState(
     cardHeader: this.cardType.toString().split(".").last + " Card",
     teams: this.teams,
     possibleFouls: getFoulsForCardType(this.cardType),
@@ -36,7 +35,7 @@ class FoulCard extends StatefulWidget {
   );
 }
 
-class _FoulCardState extends State<FoulCard> {
+class FoulCardState extends State<FoulCard> {
 
   String cardHeader;
   List<Team> teams;
@@ -51,6 +50,7 @@ class _FoulCardState extends State<FoulCard> {
   bool hasFouler = false;
   GlobalKey fouler = GlobalKey();
   GlobalKey foul = GlobalKey();
+  Function onSubmit = () => {};
 
   giveCard() {
       parent.scoreKeeper.giveCard(
@@ -61,6 +61,7 @@ class _FoulCardState extends State<FoulCard> {
       );
       parent.setState(() {(parent.fadeBackgroundKey.currentState as FadeBackgroundState).isFaded = false;});
       clearCard();
+      onSubmit();
   }
 
   clearCard() {
@@ -71,7 +72,11 @@ class _FoulCardState extends State<FoulCard> {
       });
   }
 
-  _FoulCardState({
+  setOnSubmit(Function newOnSubmit) {
+    onSubmit = newOnSubmit;
+  }
+
+  FoulCardState({
     this.cardHeader,
     this.teams,
     this.selectedTeam,

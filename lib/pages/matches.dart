@@ -125,10 +125,10 @@ class MatchState extends State<MatchesPage> {
           ),
           FadeBackground(key: fadeBackgroundKey, 
             onTapped: () {
-              ClippedDialogState current = (cardCollectionKey.currentWidget as CardCollection).selectedCard;
+              ClippedDialogState current = (cardCollectionKey.currentState as CardCollectionState).selectedCard;
               if (current != null) {
                 current.setState(() {
-                  current.widget.isShown = false;
+                  current.isShown = false;
                   (current.widget.child as FoulCard).clearCard();
                 });
               }
