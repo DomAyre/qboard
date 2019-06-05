@@ -19,41 +19,24 @@ class Foul {
 
 getFoulsForCardType(CardType type) => fouls.where((Foul foul) => foul.possibleCards.contains(type)).toList();
 
-class FoulSelector extends StatefulWidget {
+class FoulSelector extends DropdownButton {
 
   FoulSelector({
     Key key,
-    @required this.fouls,
-  }) : super(key: key);
-
-  final List<Foul> fouls;
-
-  @override
-  FoulSelectorState createState() => FoulSelectorState(fouls: fouls);
-}
-
-class FoulSelectorState extends State<FoulSelector> {
-
-  final List<Foul> fouls;
-  Foul selected;
-
-  FoulSelectorState({this.fouls});
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton (
-      value: selected,
-      items: fouls.map((foul) => DropdownMenuItem (
-          child: Text(foul.name),
-          value: foul,
-        )
-      ).toList(),
-      onChanged: (newValue) {
-        setState(() {selected = newValue;});
-      },
-      isExpanded: true,
-    );
-  }
+    @required List<Foul> fouls,
+    @required onChanged,
+    Foul value
+  }) : super(
+    key: key, 
+    items: fouls.map((foul) => DropdownMenuItem (
+        child: Text(foul.name),
+        value: foul,
+      )
+    ).toList(),
+    onChanged: onChanged,
+    value: value,
+    isExpanded: true
+  );
 }
 
 List<Foul> fouls = [

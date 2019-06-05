@@ -37,11 +37,25 @@ class _FoulCardState extends State<FoulCard> {
   String cardHeader;
   List<Team> teams;
   Team selectedTeam;
+  Player selectedPlayer;
   List<Foul> possibleFouls;
+  Foul selectedFoul;
   MatchState parent;
   FoulCard card;
+  bool hasFoul = false;
+  bool hasFouler = false;
   GlobalKey fouler = GlobalKey();
   GlobalKey foul = GlobalKey();
+
+  submitFunction() {
+      parent.scoreKeeper.giveCard(
+        time: parent.matchTimer.elapsed,
+        fouler: selectedPlayer,
+        foul: selectedFoul,
+        cardType: card.cardType
+      );
+      parent.setState(() {(parent.fadeBackgroundKey.currentState as FadeBackgroundState).isFaded = false;});
+  }
 
   _FoulCardState({
     this.cardHeader,
@@ -58,18 +72,6 @@ class _FoulCardState extends State<FoulCard> {
     List<Player> allPlayers = teams.fold([], (players, team) => players + team.players);
     List<Player> players = selectedTeam != null ? selectedTeam.players : allPlayers;
     
-    bool hasFouler = fouler.currentState != null ? (fouler.currentState as PlayerSelectorState).selected != null : false;
-    bool hasFoul = foul.currentState != null ? (foul.currentState as FoulSelectorState).selected != null : false;
-
-    VoidCallback submitFunction = hasFoul && hasFouler ? () {
-      parent.scoreKeeper.giveCard(
-        time: parent.matchTimer.elapsed,
-        fouler: (fouler.currentState as PlayerSelectorState).selected,
-        foul: (foul.currentState as FoulSelectorState).selected,
-        cardType: card.cardType
-      );
-      parent.setState(() {(parent.fadeBackgroundKey.currentWidget as FadeBackground).isFaded = false;});
-    } : null;
 
     return Padding(
       padding: EdgeInsets.only(left: 30, right: 30),
@@ -104,14 +106,22 @@ class _FoulCardState extends State<FoulCard> {
           ),
           Container(height: 25),
           Text("PLAYER", style: headerStyle.copyWith(color: Colors.grey[800])),
-          PlayerSelector(key: fouler, players: players, onChanged: () {setState(() {});}),
+          PlayerSelector(key: fouler, players: players, value: selectedPlayer, onChanged: (dynamic newPlayer) {
+            setState(() {
+              selectedPlayer = newPlayer;
+            });
+        }),
           Container(height: 25),
           Text("FOUL", style: headerStyle.copyWith(color: Colors.grey[800])),
-          FoulSelector(key: foul, fouls: this.possibleFouls),
+          FoulSelector(key: foul, fouls: this.possibleFouls, value: selectedFoul, onChanged: (dynamic newFoul) {
+            setState(() {
+              selectedFoul = newFoul;
+            });
+          }),
           Container(height: 5),
           FlatButton(
             child: Text("SUBMIT", style: headerStyle, textAlign: TextAlign.right,), 
-            onPressed: submitFunction,
+            onPressed: selectedPlayer != null && selectedFoul != null ? submitFunction : null,
           )
         ],
       ),

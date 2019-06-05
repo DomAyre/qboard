@@ -26,7 +26,7 @@ class CardCollection extends StatelessWidget {
     selectedCard.setState(() {selectedCard.widget.isShown = true;});
 
     fadeBackground.currentState.setState(() {
-      (fadeBackground.currentWidget as FadeBackground).isFaded = true;
+      (fadeBackground.currentState as FadeBackgroundState).isFaded = true;
     });
   }
 

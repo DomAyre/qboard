@@ -7,27 +7,28 @@ class FadeBackground extends StatefulWidget {
   
   FadeBackground({
     Key key,
-    @required this.isFaded,
     @required this.onTapped,
   }) : super(key: key);
 
-  bool isFaded;
-  VoidCallback onTapped;
+  final VoidCallback onTapped;
 
   @override
-  _FadeBackgroundState createState() => _FadeBackgroundState();
+  FadeBackgroundState createState() => FadeBackgroundState();
 }
 
-class _FadeBackgroundState extends State<FadeBackground> {
+class FadeBackgroundState extends State<FadeBackground> {
+
+  bool isFaded = false;
+
   @override
   Widget build(BuildContext context) {
     return Positioned.fill(
       child: Offstage(
-        offstage: !widget.isFaded,
+        offstage: !isFaded,
         child: GestureDetector(
           onTap: () => {
             widget.onTapped(),
-            setState(() {widget.isFaded = false;}),
+            setState(() {isFaded = false;}),
           },
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),

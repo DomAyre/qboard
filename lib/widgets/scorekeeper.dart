@@ -131,7 +131,8 @@ class ScoreButtonState extends State<ScoreButton> {
   }
 }
 
-class ScoreDialog extends StatelessWidget {
+class ScoreDialog extends StatefulWidget {
+  
   const ScoreDialog({
     Key key,
     @required this.team,
@@ -144,25 +145,34 @@ class ScoreDialog extends StatelessWidget {
   final Duration scoreTime;
 
   @override
+  _ScoreDialogState createState() => _ScoreDialogState();
+}
+
+class _ScoreDialogState extends State<ScoreDialog> {
+
+  Player scorer;
+  Player assist;
+
+  @override
   Widget build(BuildContext context) {
-
-    GlobalKey scorerKey = GlobalKey();
-    GlobalKey assistKey = GlobalKey();   
-
     return SimpleDialog (
       contentPadding: EdgeInsets.all(24),
-      title: Text("${team.name} Goal"),              
+      title: Text("${widget.team.name} Goal"),              
       children: <Widget>[
         Text("SCORER", style: headerStyle),
-        PlayerSelector(key: scorerKey, players: team.players),
+        PlayerSelector(players: widget.team.players, value: scorer, onChanged: (dynamic newPlayer) {
+          setState(() {scorer = newPlayer;});
+        }),
         Text("ASSIST", style: headerStyle),
-        PlayerSelector(key: assistKey, players: team.players),
+        PlayerSelector(players: widget.team.players, value: assist, onChanged: (dynamic newPlayer) {
+          setState(() {assist = newPlayer;});
+        }),
         FlatButton(
           child: Text("SCORE"),
           onPressed: () {
-            scoreKeeper.score(time: scoreTime, team: team, 
-              scorer: (scorerKey.currentState as PlayerSelectorState).selected,
-              assist: (assistKey.currentState as PlayerSelectorState).selected,
+            widget.scoreKeeper.score(time: widget.scoreTime, team: widget.team, 
+              scorer: scorer,
+              assist: assist,
             );
             return Navigator.pop(context);
           }
