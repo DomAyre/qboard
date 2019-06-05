@@ -37,6 +37,7 @@ class _FoulCardState extends State<FoulCard> {
   String cardHeader;
   List<Team> teams;
   Team selectedTeam;
+  List<Player> players;
   Player selectedPlayer;
   List<Foul> possibleFouls;
   Foul selectedFoul;
@@ -64,15 +65,12 @@ class _FoulCardState extends State<FoulCard> {
     this.possibleFouls,
     this.parent,
     this.card
-  });
+  }) {
+    players = teams.fold([], (players, team) => players + team.players);
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    List<Player> allPlayers = teams.fold([], (players, team) => players + team.players);
-    List<Player> players = selectedTeam != null ? selectedTeam.players : allPlayers;
-    
-
     return Padding(
       padding: EdgeInsets.only(left: 30, right: 30),
       child: Column(
@@ -98,8 +96,10 @@ class _FoulCardState extends State<FoulCard> {
                   teams[0]: Text(teams[0].name, style: headerStyle.copyWith(fontSize: 14)),
                   teams[1]: Text(teams[1].name, style: headerStyle.copyWith(fontSize: 14)),
                 }, 
-                onValueChanged: (newTeam) {setState(() {
+                onValueChanged: (Team newTeam) {setState(() {
                   selectedTeam = newTeam;
+                  selectedPlayer = null;
+                  players = newTeam.players;
                 });},
               ),
             ),
@@ -108,6 +108,8 @@ class _FoulCardState extends State<FoulCard> {
           Text("PLAYER", style: headerStyle.copyWith(color: Colors.grey[800])),
           PlayerSelector(key: fouler, players: players, value: selectedPlayer, onChanged: (dynamic newPlayer) {
             setState(() {
+              selectedTeam = teams.where((team) => team.players.contains(newPlayer)).toList()[0];
+              players = selectedTeam.players;
               selectedPlayer = newPlayer;
             });
         }),
