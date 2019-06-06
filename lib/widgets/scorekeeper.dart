@@ -33,9 +33,18 @@ class ScoreKeeper extends Manager {
       cardType: cardType, 
     );
 
-    // if (fouler != null) fouler
+    // Give the player a red if they are given a second yellow
+    bool secondYellow = cardType == CardType.Yellow && fouler.fouls.where((foul) => foul.cardType == CardType.Yellow).length == 1;
+
+    if (fouler != null) fouler.fouls.add(foulEvent);
+    
     matchData.addEvent(foulEvent);
     invalidate();
+
+    if (secondYellow) {
+      giveCard(time: time, fouler: fouler, foul: fouls.firstWhere((foul) => foul.name == "Second Yellow"), cardType: CardType.Red);
+    }
+    
   }
 
   List<Map<String, dynamic>> getGoals() => matchData.getGoals();

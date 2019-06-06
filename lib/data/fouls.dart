@@ -55,4 +55,9 @@ List<Foul> fouls = [
     description: "Tackling a player when they're just about to recieve a ball",
     possibleCards: [CardType.Red],
   ),
+  Foul(
+    name: "Second Yellow", 
+    description: "Receiving two yellow cards",
+    possibleCards: [CardType.Red],
+  ),
 ];

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import './match.dart';
+import 'fouls.dart';
 
 class Player {
 
   List<Goal> goals = [];
   List<Goal> assists = [];
+  List<FoulEvent> fouls = [];
   String firstName;
   String lastName;
 
