@@ -108,7 +108,7 @@ class ScoreButtonState extends State<ScoreButton> {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer (
-      duration : Duration(milliseconds: 500),
+      duration : longAnimation,
       child : GestureDetector (
         onTap : () => showDialog(
           context: context,

@@ -8,3 +8,5 @@ TextStyle dialogHeaderStyle = TextStyle(
   color: Colors.grey[800], 
   fontSize: 22,
 );
+
+Duration longAnimation = Duration(milliseconds: 300);

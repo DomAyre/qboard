@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qboard/common.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 import 'foul_card.dart';
@@ -33,7 +34,7 @@ class ClippedDialogState extends State<ClippedDialog> with TickerProviderStateMi
   ClippedDialogState() {    
     alignmentController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 300),
+      duration: longAnimation,
     );
   }
 
@@ -61,7 +62,7 @@ class ClippedDialogState extends State<ClippedDialog> with TickerProviderStateMi
       child: AnimatedContainer(
         transform: Matrix4.translation(Vector3(0, isShown? 0 : 370, 0)),
         width: isShown ? 320 : 220,
-        duration: Duration(milliseconds: 300),
+        duration: longAnimation,
         curve: Curves.fastOutSlowIn,
         child: Transform.translate(
           offset: Offset(0, offset),
@@ -71,7 +72,7 @@ class ClippedDialogState extends State<ClippedDialog> with TickerProviderStateMi
             },
             child: Card(
               color: widget.color,
-              elevation: isShown ? 30 : 3,
+              elevation: isShown ? 24 : 3,
               child: Opacity(
                 opacity: isShown ? 1.0 : 0.0,
                 child: Container(
