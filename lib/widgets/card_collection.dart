@@ -30,7 +30,7 @@ class CardCollectionState extends State<CardCollection> {
 
   tapCallback(ClippedDialogState tappedCard) {
     
-    if (selectedCard != null) {
+    if (selectedCard != null && !tappedCard.isShown) {
       selectedCard.setState(() {
         selectedCard.isShown = false;
         (selectedCard.widget.child as FoulCard).clearCard();
