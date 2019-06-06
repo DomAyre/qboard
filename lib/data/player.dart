@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import './match.dart';
-import 'fouls.dart';
 
 class Player {
 

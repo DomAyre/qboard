@@ -52,7 +52,7 @@ class ClippedDialogState extends State<ClippedDialog> with TickerProviderStateMi
 
     alignmentTween = AlignmentTween(
       begin: Alignment(widget.edgeAlignment, 1.0),
-      end: Alignment(0.0, 0.0),
+      end: Alignment(0.0, 1.0),
     ).animate(alignmentController);
 
     alignmentController.animateTo(isShown ? 1 : 0, curve: Curves.fastOutSlowIn);
@@ -60,7 +60,7 @@ class ClippedDialogState extends State<ClippedDialog> with TickerProviderStateMi
     return AlignTransition(
       alignment: alignmentTween,
       child: AnimatedContainer(
-        transform: Matrix4.translation(Vector3(0, isShown? 0 : 370, 0)),
+        transform: Matrix4.translation(Vector3(0, isShown? -80 : 370, 0)),
         width: isShown ? 320 : 220,
         duration: longAnimation,
         curve: Curves.fastOutSlowIn,
