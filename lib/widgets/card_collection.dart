@@ -28,20 +28,38 @@ class CardCollectionState extends State<CardCollection> {
   GlobalKey yellowCardKey = GlobalKey();
   GlobalKey redCardKey = GlobalKey();
 
-  tapCallback(ClippedDialogState tappedCard) {
-    
-    if (selectedCard != null && tappedCard.alignmentController.value != 1) {
+  onCardShow(ClippedDialogState card) {
+
+    // If a different card is currently selected, hide it
+    if (selectedCard != null && selectedCard != card) {
       selectedCard.setState(() {
-        selectedCard.alignmentController.value = 0;
+        selectedCard.animation.animateBack(0, curve: Curves.fastOutSlowIn);
         (selectedCard.widget.child as FoulCard).clearCard();
       });
     }
-    selectedCard = tappedCard;
-    selectedCard.setState(() {selectedCard.alignmentController.value = 1;});
 
+    selectedCard = card;
+
+    // Fade the background
     widget.fadeBackground.currentState.setState(() {
       (widget.fadeBackground.currentState as FadeBackgroundState).isFaded = true;
     });
+  }
+
+  onCardHide(ClippedDialogState card) {
+
+    selectedCard = null;
+
+    // Unfade the background
+    widget.fadeBackground.currentState.setState(() {
+      (widget.fadeBackground.currentState as FadeBackgroundState).isFaded = false;
+    });
+  }
+
+  onCardDrag(ClippedDialogState card, double progress) {
+    if (selectedCard != null && selectedCard != card) {
+      selectedCard.animation.value = 1 - progress;
+    }
   }
 
   @override
@@ -54,7 +72,9 @@ class CardCollectionState extends State<CardCollection> {
           children: [
             ClippedDialog(
               key: blueCardKey,
-              onTapped: tapCallback,
+              onShow: onCardShow,
+              onHide: onCardHide,
+              onDrag: onCardDrag,
               edgeAlignment: 0.8,
               color: cardTypeColor[CardType.Red],
               child: FoulCard(
@@ -65,7 +85,9 @@ class CardCollectionState extends State<CardCollection> {
             ),
             ClippedDialog(
               key: yellowCardKey,
-              onTapped: tapCallback,
+              onShow: onCardShow,
+              onHide: onCardHide,
+              onDrag: onCardDrag,
               edgeAlignment: 0.0,
               color: cardTypeColor[CardType.Yellow],
               child: FoulCard(
@@ -76,7 +98,9 @@ class CardCollectionState extends State<CardCollection> {
             ),
             ClippedDialog(
               key: redCardKey,
-              onTapped: tapCallback,
+              onShow: onCardShow,
+              onHide: onCardHide,
+              onDrag: onCardDrag,
               edgeAlignment: -0.8,
               color: cardTypeColor[CardType.Blue],
               child: FoulCard(
