@@ -26,7 +26,6 @@ class ClippedDialog extends StatefulWidget {
 class ClippedDialogState extends State<ClippedDialog> with TickerProviderStateMixin {
 
   double offset = 0;
-  bool isShown = false;
 
   AnimationController alignmentController;
   Animation<Alignment> alignmentTween;
@@ -45,7 +44,7 @@ class ClippedDialogState extends State<ClippedDialog> with TickerProviderStateMi
     if (childWidgetKey.currentState != null) {
       (childWidgetKey.currentState as FoulCardState).setOnSubmit(() {
         setState(() {
-          isShown = false;
+          alignmentController.value = 0;
         });
       });
     }
@@ -55,13 +54,11 @@ class ClippedDialogState extends State<ClippedDialog> with TickerProviderStateMi
       end: Alignment(0.0, 1.0),
     ).animate(alignmentController);
 
-    alignmentController.animateTo(isShown ? 1 : 0, curve: Curves.fastOutSlowIn);
-
-    return AlignTransition(
-      alignment: alignmentTween,
+    return Align(
+      alignment: Alignment(widget.edgeAlignment - (widget.edgeAlignment * alignmentController.value), 1.0),
       child: AnimatedContainer(
-        transform: Matrix4.translation(Vector3(0, isShown? -80 : 370, 0)),
-        width: isShown ? 320 : 220,
+        transform: Matrix4.translation(Vector3(0, 370 - (450 * alignmentController.value), 0)),
+        width: 220 + (100 * alignmentController.value),
         duration: longAnimation,
         curve: Curves.fastOutSlowIn,
         child: Transform.translate(
@@ -72,9 +69,9 @@ class ClippedDialogState extends State<ClippedDialog> with TickerProviderStateMi
             },
             child: Card(
               color: widget.color,
-              elevation: isShown ? 24 : 3,
+              elevation: 3 + (21 * alignmentController.value),
               child: Opacity(
-                opacity: isShown ? 1.0 : 0.0,
+                opacity: alignmentController.value,
                 child: Container(
                   height: 420,
                   child: widget.child

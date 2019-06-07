@@ -30,14 +30,14 @@ class CardCollectionState extends State<CardCollection> {
 
   tapCallback(ClippedDialogState tappedCard) {
     
-    if (selectedCard != null && !tappedCard.isShown) {
+    if (selectedCard != null && tappedCard.alignmentController.value != 1) {
       selectedCard.setState(() {
-        selectedCard.isShown = false;
+        selectedCard.alignmentController.value = 0;
         (selectedCard.widget.child as FoulCard).clearCard();
       });
     }
     selectedCard = tappedCard;
-    selectedCard.setState(() {selectedCard.isShown = true;});
+    selectedCard.setState(() {selectedCard.alignmentController.value = 1;});
 
     widget.fadeBackground.currentState.setState(() {
       (widget.fadeBackground.currentState as FadeBackgroundState).isFaded = true;

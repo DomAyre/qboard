@@ -145,7 +145,7 @@ class MatchState extends State<MatchesPage> {
               ClippedDialogState current = (cardCollectionKey.currentState as CardCollectionState).selectedCard;
               if (current != null) {
                 current.setState(() {
-                  current.isShown = false;
+                  current.alignmentController.value = 0;
                   (current.widget.child as FoulCard).clearCard();
                 });
               }
