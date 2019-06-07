@@ -59,7 +59,7 @@ class FoulCardState extends State<FoulCard> {
         foul: selectedFoul,
         cardType: card.cardType
       );
-      parent.setState(() {(parent.fadeBackgroundKey.currentState as FadeBackgroundState).isFaded = false;});
+      parent.setState(() {(parent.fadeBackgroundKey.currentState as FadeBackgroundState).opacity = 0;});
       clearCard();
       onSubmit();
   }

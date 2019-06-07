@@ -18,21 +18,21 @@ class FadeBackground extends StatefulWidget {
 
 class FadeBackgroundState extends State<FadeBackground> {
 
-  bool isFaded = false;
+  double opacity = 0;
 
   @override
   Widget build(BuildContext context) {
     return Positioned.fill(
       child: Offstage(
-        offstage: !isFaded,
+        offstage: opacity == 0,
         child: GestureDetector(
           onTap: () => {
             widget.onTapped(),
-            setState(() {isFaded = false;}),
+            setState(() {opacity = 0;}),
           },
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-            child: Container(color: Colors.black.withOpacity(0.2)),
+            filter: ImageFilter.blur(sigmaX: 5 * opacity, sigmaY: 5 * opacity),
+            child: Container(color: Colors.black.withOpacity(0),),
           ),
         ),
       )

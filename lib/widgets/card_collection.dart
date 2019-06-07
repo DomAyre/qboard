@@ -42,7 +42,7 @@ class CardCollectionState extends State<CardCollection> {
 
     // Fade the background
     widget.fadeBackground.currentState.setState(() {
-      (widget.fadeBackground.currentState as FadeBackgroundState).isFaded = true;
+      (widget.fadeBackground.currentState as FadeBackgroundState).opacity = 1;
     });
   }
 
@@ -52,14 +52,20 @@ class CardCollectionState extends State<CardCollection> {
 
     // Unfade the background
     widget.fadeBackground.currentState.setState(() {
-      (widget.fadeBackground.currentState as FadeBackgroundState).isFaded = false;
+      (widget.fadeBackground.currentState as FadeBackgroundState).opacity = 0;
     });
   }
 
   onCardDrag(ClippedDialogState card, double progress) {
     if (selectedCard != null && selectedCard != card) {
-      selectedCard.animation.value = 1 - progress;
+      selectedCard.animation.value = 1- progress;
     }
+
+    // Set the background fade
+    widget.fadeBackground.currentState.setState(() {
+      if (selectedCard != null && selectedCard == card) progress = 1 - progress;
+      (widget.fadeBackground.currentState as FadeBackgroundState).opacity = progress;
+    });
   }
 
   @override
