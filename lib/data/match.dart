@@ -108,3 +108,24 @@ class FoulEvent extends MatchEvent {
   }
   
 }
+
+class CatchEvent extends MatchEvent {
+
+  String symbolPath = "assets/snitch_catch_symbol.png";
+  Duration time;
+  Team team;
+  Player catcher;
+  bool isGood;
+
+  CatchEvent({
+    @required this.time,
+    @required this.team,
+    @required this.catcher,
+    @required this.isGood,
+  });
+
+  String toString() {
+    return "${this.catcher.getFullName()} caught for ${this.team.name}, catch called ${isGood ? "good" : "no good"}";
+  }
+
+}

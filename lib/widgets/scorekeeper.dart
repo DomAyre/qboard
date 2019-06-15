@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:qboard/colors.dart';
 import 'package:qboard/data/fouls.dart';
+import 'package:qboard/widgets/slider_theme.dart';
+import 'package:qboard/widgets/snitch_catch_dialog.dart';
 import '../pages/matches.dart';
 import '../data/match.dart';
 import '../widgets/timer.dart';
@@ -12,8 +15,9 @@ class ScoreKeeper extends Manager {
 
   final MatchState match;
   Match matchData;
+  MatchState state;
 
-  ScoreKeeper(this.match, team1, team2) {
+  ScoreKeeper({this.match, team1, team2}) {
     matchData = Match(team1: team1, team2: team2);
   }
 
@@ -44,7 +48,14 @@ class ScoreKeeper extends Manager {
     if (secondYellow) {
       giveCard(time: time, fouler: fouler, foul: fouls.firstWhere((foul) => foul.name == "Second Yellow"), cardType: CardType.Red);
     }
+  }
+
+  void snitchCatch({@required Duration time, @required Team team, Player catcher, bool isGood}) {
     
+    CatchEvent snitchCatch = CatchEvent(time: time, team: team, catcher: catcher, isGood: isGood);
+
+    matchData.addEvent(snitchCatch);
+    invalidate();
   }
 
   List<Map<String, dynamic>> getGoals() => matchData.getGoals();
@@ -164,20 +175,30 @@ class _ScoreDialogState extends State<ScoreDialog> {
 
   @override
   Widget build(BuildContext context) {
+
+    Color background = widget.team.background == Colors.black ? Colors.grey[900] : widget.team.background;
+    Color foreground = background.computeLuminance() < 0.2 ? Colors.white : Colors.grey[800];
+    Color accent = widget.team.foreground;
+
     return SimpleDialog (
+      backgroundColor: background,
       contentPadding: EdgeInsets.all(24),
-      title: Text("${widget.team.name} Goal"),              
+      title: Text("${widget.team.name} Goal", style: dialogHeaderStyle.copyWith(color: accent)),              
       children: <Widget>[
-        Text("SCORER", style: headerStyle),
-        PlayerSelector(players: widget.team.players, value: scorer, onChanged: (dynamic newPlayer) {
-          setState(() {scorer = newPlayer;});
-        }),
-        Text("ASSIST", style: headerStyle),
-        PlayerSelector(players: widget.team.players, value: assist, onChanged: (dynamic newPlayer) {
-          setState(() {assist = newPlayer;});
-        }),
+        Text("SCORER", style: headerStyle.copyWith(color: foreground)),
+        PlayerSelector(
+          players: widget.team.players, 
+          value: scorer, 
+          foreground: foreground, 
+          onChanged: (dynamic newPlayer) { setState(() {scorer = newPlayer;}); }),
+        Text("ASSIST", style: headerStyle.copyWith(color: foreground)),
+        PlayerSelector(
+          players: widget.team.players, 
+          value: assist, 
+          foreground: foreground, 
+          onChanged: (dynamic newPlayer) { setState(() {assist = newPlayer;}); }),
         FlatButton(
-          child: Text("SCORE"),
+          child: Text("SCORE", style: TextStyle(color: accent)),
           onPressed: () {
             widget.scoreKeeper.score(time: widget.scoreTime, team: widget.team, 
               scorer: scorer,
@@ -221,15 +242,76 @@ class BludgerControlSliderState extends State<BludgerControlSlider> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
       child: SliderTheme(
-        data: SliderTheme.of(context).copyWith(
-          trackHeight: 8,
-          thumbShape: RoundSliderThumbShape(enabledThumbRadius: 15),
-          tickMarkShape: SliderTickMarkShape.noTickMark,
-          thumbColor: Colors.red[900]
+        data: standardSlider(context).copyWith(
+          thumbColor: bludgerColor
         ),
         child: Slider(value: sliderValue, min: 0, max: 2, divisions: 2,
           onChanged: (newState) => setState(() {sliderValue = newState;}),
           onChangeEnd: (newState) => scoreKeeper.setBludgerControlState(time: matchTimer.elapsed, newState: ControlState.values[newState.toInt()]),
+        ),
+      ),
+    );
+  }
+}
+
+class SnitchCatchSlider extends StatefulWidget {
+
+  const SnitchCatchSlider({
+    Key key,
+    @required this.scoreKeeper,
+    @required this.matchTimer,
+  }) : super(key: key);
+  
+  final ScoreKeeper scoreKeeper;
+  final MatchTimer matchTimer;
+
+  @override
+  SnitchCatchSliderState createState() {
+    return SnitchCatchSliderState(scoreKeeper: scoreKeeper, matchTimer: matchTimer);
+  }
+}
+
+class SnitchCatchSliderState extends State<SnitchCatchSlider> {
+
+  final ScoreKeeper scoreKeeper;
+  final MatchTimer matchTimer;
+  double sliderValue = 1.0;
+
+  SnitchCatchSliderState({@required this.scoreKeeper, @required this.matchTimer});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      child: SliderTheme(
+        data: standardSlider(context).copyWith(
+          thumbColor: snitchColor,
+        ),
+        child: Slider(value: sliderValue, min: 0, max: 2, divisions: 2,
+          onChanged: (newState) => setState(() {sliderValue = newState;}),
+          onChangeEnd: (newState) {
+            Team catchingTeam;
+            if (newState == 0.0) {
+              catchingTeam = scoreKeeper.match.team1;
+            } 
+            else if (newState == 2.0) {
+              catchingTeam = scoreKeeper.match.team2;
+            } 
+            setState(() {
+              sliderValue = 1.0;
+            });
+            if (catchingTeam != null) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => SnitchCatchDialog(
+                  scoreKeeper: scoreKeeper,
+                  matchTimer: matchTimer,
+                  teams:[scoreKeeper.match.team1, scoreKeeper.match.team2], 
+                  catchingTeam: catchingTeam,
+                )
+              );
+            }
+          },
         ),
       ),
     );

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:qboard/data/fouls.dart';
+import 'package:qboard/data/rule_set.dart';
 import 'package:qboard/widgets/card_collection.dart';
 import 'package:qboard/widgets/clipped_dialog.dart';
 import 'package:qboard/widgets/fade_background.dart';
@@ -32,6 +33,7 @@ class MatchState extends State<MatchesPage> {
 
   MatchTimer matchTimer;
   ScoreKeeper scoreKeeper;
+  RuleSet rules = RuleSet(snitchReleased: Duration(seconds: 2));
 
   Team team1;
   Team team2;
@@ -40,14 +42,16 @@ class MatchState extends State<MatchesPage> {
   GlobalKey cardCollectionKey = GlobalKey();
 
   MatchState() {
-    matchTimer = MatchTimer(match: this);
-    team1 = Team("Bristol QC", "assets/bristol_bears.png", Colors.black, Colors.red);
-    team2 = Team("TeamB", "assets/bristol_bees.png", Colors.black, Colors.yellow);
+    matchTimer = MatchTimer(match: this, events: [rules.snitchReleased], onNewEvent: () {
+      setState(() {});
+    });
+    team1 = Team("Mermaids", "assets/mermaids.png", Color(0xFF144452), Color(0xFF7CB3D1));
+    team2 = Team("Archers", "assets/archers.png", Color(0xFF0C3D00), Color(0xFF7A7A7A));
 
     team1.addPlayer(Player(firstName: "Player", lastName: "One"));
     team2.addPlayer(Player(firstName: "Player", lastName: "Two"));
     team2.addPlayer(Player(firstName: "Player", lastName: "Three"));
-    scoreKeeper = ScoreKeeper(this, team1, team2);
+    scoreKeeper = ScoreKeeper(match: this, team1: team1, team2: team2);
   }
 
   @override
@@ -56,6 +60,7 @@ class MatchState extends State<MatchesPage> {
     AppBar appBar = AppBar(
       title: TimerText(matchTimer: matchTimer),
       centerTitle: true,
+      backgroundColor: Color(0xFF1E2D5C),
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(100.0),
         child: Padding(
@@ -134,6 +139,15 @@ class MatchState extends State<MatchesPage> {
                       ],
                     ),
                     Text("GOALS", style: headerStyle, textAlign: TextAlign.center),
+                    Offstage(
+                      offstage: matchTimer.elapsed < rules.snitchReleased,
+                      child: Column(
+                        children: [
+                          Text("SNITCH", style: headerStyle, textAlign: TextAlign.center),
+                          SnitchCatchSlider(scoreKeeper: scoreKeeper, matchTimer: matchTimer)
+                        ]
+                      )
+                    ),
                     EventStream(scoreKeeper: scoreKeeper),
                   ],
                 ),

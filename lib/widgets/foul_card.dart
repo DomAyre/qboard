@@ -4,6 +4,7 @@ import 'package:qboard/data/fouls.dart';
 import 'package:qboard/data/player.dart';
 import 'package:qboard/data/team.dart';
 import 'package:qboard/pages/matches.dart';
+import 'package:qboard/widgets/binary_team_selector.dart';
 import 'package:qboard/widgets/fade_background.dart';
 
 import '../common.dart';
@@ -50,6 +51,7 @@ class FoulCardState extends State<FoulCard> {
   bool hasFouler = false;
   GlobalKey fouler = GlobalKey();
   GlobalKey foul = GlobalKey();
+  GlobalKey teamSelector = GlobalKey();
   Function onSubmit = () => {};
 
   giveCard() {
@@ -66,7 +68,9 @@ class FoulCardState extends State<FoulCard> {
 
   clearCard() {
     setState(() {
-        selectedTeam = null;
+        teamSelector.currentState.setState(() {
+          (teamSelector.currentState as BinaryTeamSelectorState).selectedTeam = null;
+        });
         selectedPlayer = null;
         selectedFoul = null;
       });
@@ -99,34 +103,24 @@ class FoulCardState extends State<FoulCard> {
           Container(height: 25),
           Text("TEAM", style: headerStyle.copyWith(color: Colors.grey[800])),
           Container(height: 20),
-          Material(
-            color: Colors.grey[800],
-            borderRadius: BorderRadius.circular(5.0),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal:0.0),
-              child: CupertinoSegmentedControl(
-                borderColor: Colors.grey[800],
-                unselectedColor: Colors.grey[800],
-                pressedColor: cardTypeColor[this.card.cardType],
-                selectedColor: cardTypeColor[this.card.cardType],
-                groupValue: selectedTeam,
-                children: <Team, Widget>{
-                  teams[0]: Text(teams[0].name, style: headerStyle.copyWith(fontSize: 14)),
-                  teams[1]: Text(teams[1].name, style: headerStyle.copyWith(fontSize: 14)),
-                }, 
-                onValueChanged: (Team newTeam) {setState(() {
-                  selectedTeam = newTeam;
-                  selectedPlayer = null;
-                  players = newTeam.players;
-                });},
-              ),
-            ),
+          BinaryTeamSelector(
+            key: teamSelector,
+            background: Colors.grey[800],
+            foreground: cardTypeColor[this.card.cardType],
+            teams: teams,
+            onChanged: (Team newTeam) {setState(() {
+              selectedPlayer = null;
+              players = newTeam.players;
+            });},
           ),
           Container(height: 25),
           Text("PLAYER", style: headerStyle.copyWith(color: Colors.grey[800])),
           PlayerSelector(key: fouler, players: players, value: selectedPlayer, onChanged: (dynamic newPlayer) {
             setState(() {
               selectedTeam = teams.where((team) => team.players.contains(newPlayer)).toList()[0];
+              teamSelector.currentState.setState(() {                
+                (teamSelector.currentState as BinaryTeamSelectorState).selectedTeam = selectedTeam;
+              });
               players = selectedTeam.players;
               selectedPlayer = newPlayer;
             });

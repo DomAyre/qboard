@@ -30,6 +30,8 @@ flutter:
    - assets/logo.png
    - assets/bristol_bears.png
    - assets/bristol_bees.png
+   - assets/archers.png
+   - assets/mermaids.png
    - assets/goal_scored_symbol.png
    - assets/bludger_control_symbol.png
    - assets/card_symbol.png

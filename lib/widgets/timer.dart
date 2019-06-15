@@ -5,7 +5,9 @@ import '../pages/matches.dart';
 class MatchTimer extends Stopwatch {
 
   final MatchState match;
-  MatchTimer({this.match});
+  final List<Duration> events;
+  final Function onNewEvent;
+  MatchTimer({this.match, this.events, this.onNewEvent});
 
   static String _formatTime(int number) => number >= 10 ? "$number" : "0$number";
 
@@ -37,6 +39,12 @@ class TimerTextState extends State<TimerText> {
     setState(() {
       timeText = MatchTimer.getTimeString(matchTimer.elapsed);
     });
+
+    List<Duration> passedEvents = matchTimer.events.where((Duration event) => matchTimer.elapsed > event).toList();
+    for (Duration passedEvent in passedEvents) {
+      matchTimer.events.remove(passedEvent);
+      matchTimer.onNewEvent();
+    }
   }
 
   @override
