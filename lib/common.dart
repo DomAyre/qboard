@@ -9,4 +9,5 @@ TextStyle dialogHeaderStyle = TextStyle(
   fontSize: 22,
 );
 
+Duration mediumAnimation = Duration(milliseconds: 150);
 Duration longAnimation = Duration(milliseconds: 300);

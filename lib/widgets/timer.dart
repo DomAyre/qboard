@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:qboard/common.dart';
 import '../pages/matches.dart';
 
 class MatchTimer extends Stopwatch {
@@ -62,17 +63,30 @@ class TimerPlayPause extends StatefulWidget {
   TimerPlayPauseState createState() => TimerPlayPauseState(matchTimer: matchTimer); 
 }
 
-class TimerPlayPauseState extends State<TimerPlayPause> {
+class TimerPlayPauseState extends State<TimerPlayPause> with TickerProviderStateMixin {
 
   MatchTimer matchTimer;
   bool isTimerRunning = false; 
+  AnimationController animation;
+  Tween<double> playPauseTween = Tween<double>(begin: 0, end: 1);
 
-  TimerPlayPauseState({this.matchTimer});
+  TimerPlayPauseState({this.matchTimer}) {
+    animation = AnimationController(
+      duration: mediumAnimation,
+      vsync: this,
+    );
+  }
 
   void buttonPressed() {
 
-    if (isTimerRunning) matchTimer.stop();
-    else matchTimer.start();
+    if (isTimerRunning) {
+      matchTimer.stop();
+      animation.animateBack(0);
+    }
+    else {
+      matchTimer.start();
+      animation.animateTo(1);
+    }
 
     setState(() { isTimerRunning = !isTimerRunning; });
   }
@@ -80,7 +94,7 @@ class TimerPlayPauseState extends State<TimerPlayPause> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: Icon(isTimerRunning ? Icons.pause : Icons.play_arrow),
+      icon: AnimatedIcon(icon: AnimatedIcons.play_pause, progress: playPauseTween.animate(animation)),
       onPressed: buttonPressed,
     );
   }
