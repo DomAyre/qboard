@@ -46,7 +46,7 @@ class MatchState extends State<MatchesPage> {
       setState(() {});
     });
     team1 = Team("Mermaids", "assets/mermaids.png", Color(0xFF144452), Color(0xFF7CB3D1));
-    team2 = Team("Archers", "assets/archers.png", Color(0xFF0C3D00), Color(0xFF7A7A7A));
+    team2 = Team("Archers", "assets/archers.png", Color(0xFF0C3D00), Color(0xFFA5A5A5));
 
     team1.addPlayer(Player(firstName: "Player", lastName: "One"));
     team2.addPlayer(Player(firstName: "Player", lastName: "Two"));

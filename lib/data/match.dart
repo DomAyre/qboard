@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qboard/data/fouls.dart';
+import 'package:qboard/widgets/scorekeeper.dart';
 import './team.dart';
 import './player.dart';
 import './event.dart';
@@ -13,8 +14,8 @@ class Match {
 
   Match({this.team1, this.team2});
 
-  int team1Score() => this.team1.goals.length;
-  int team2Score() => this.team2.goals.length;
+  int team1Score() => team1.goals.length + team1.catches.length * 3;
+  int team2Score() => team2.goals.length + team2.catches.length * 3;
 
   void addEvent(MatchEvent event) => this.matchEvents.addLast(event);
 
@@ -128,4 +129,40 @@ class CatchEvent extends MatchEvent {
     return "${this.catcher.getFullName()} caught for ${this.team.name}, catch called ${isGood ? "good" : "no good"}";
   }
 
+}
+
+class PhaseChangeEvent extends MatchEvent {
+
+  Duration time;
+  String symbolPath = "assets/snitch_catch_symbol.png";
+  MatchPhase oldPhase;
+  MatchPhase newPhase;
+
+  PhaseChangeEvent({
+    @required this.time,
+    @required this.oldPhase,
+    @required this.newPhase,
+  });
+
+  String toString() {
+
+    String phaseChangeString = "";
+
+    switch (newPhase) {
+      case MatchPhase.Finished:
+        phaseChangeString = "Match Over";
+        break;
+      case MatchPhase.Overtime:
+        phaseChangeString = "Overtime!";
+        break;
+      case MatchPhase.DoubleOvertime:
+        phaseChangeString = "Double Overtime!";
+        break;
+      case MatchPhase.Regulation:
+        phaseChangeString = "Match Started";
+        break;
+    }
+
+    return phaseChangeString;
+  }
 }

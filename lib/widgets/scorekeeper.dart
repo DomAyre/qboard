@@ -11,11 +11,18 @@ import '../data/player.dart';
 import '../widgets/manager.dart';
 import '../common.dart';
 
+enum MatchPhase {
+  Regulation,
+  Overtime,
+  DoubleOvertime,
+  Finished
+}
+
 class ScoreKeeper extends Manager {
 
   final MatchState match;
   Match matchData;
-  MatchState state;
+  MatchPhase phase = MatchPhase.Regulation;
 
   ScoreKeeper({this.match, team1, team2}) {
     matchData = Match(team1: team1, team2: team2);
@@ -53,8 +60,28 @@ class ScoreKeeper extends Manager {
   void snitchCatch({@required Duration time, @required Team team, Player catcher, bool isGood}) {
     
     CatchEvent snitchCatch = CatchEvent(time: time, team: team, catcher: catcher, isGood: isGood);
-
     matchData.addEvent(snitchCatch);
+
+    if (isGood) {
+      team.catches.add(snitchCatch);
+
+      if (matchData.team1Score() == matchData.team2Score()) {
+        if (phase == MatchPhase.Regulation) {
+          phase = MatchPhase.Overtime;
+          matchData.addEvent(PhaseChangeEvent(time: time, oldPhase: MatchPhase.Regulation, newPhase: MatchPhase.Overtime));
+        }
+        if (phase == MatchPhase.Overtime) {
+          phase = MatchPhase.DoubleOvertime;
+          matchData.addEvent(PhaseChangeEvent(time: time, oldPhase: MatchPhase.Overtime, newPhase: MatchPhase.DoubleOvertime));
+        }
+      }
+
+      else {
+        matchData.addEvent(PhaseChangeEvent(time: time, oldPhase: phase, newPhase: MatchPhase.Finished));
+        phase = MatchPhase.Finished;
+      }
+    }
+
     invalidate();
   }
 

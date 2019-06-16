@@ -9,6 +9,7 @@ class Team {
   Color background;
   Color foreground;
   List<Goal> goals = [];
+  List<CatchEvent> catches = [];
   List<Player> players = [];
 
   Team(this.name, this.logoPath, [this.background, this.foreground]);

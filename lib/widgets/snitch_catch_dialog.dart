@@ -98,6 +98,7 @@ class _SnitchCatchDialogState extends State<SnitchCatchDialog> {
             FlatButton(
               child: Text("GOOD", style: headerStyle.copyWith(color: snitchColor)),
               onPressed: () {
+                widget.matchTimer.stop();
                 widget.scoreKeeper.snitchCatch(
                   time: widget.matchTimer.elapsed,
                   team: catchingTeam,
